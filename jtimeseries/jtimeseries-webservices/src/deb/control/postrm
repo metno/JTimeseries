@@ -1,0 +1,4 @@
+#!/bin/sh
+rm -f /var/lib/tomcat7/jtimeseries-webservices.war
+a2dissite jtimeseries
+service apache2 reload

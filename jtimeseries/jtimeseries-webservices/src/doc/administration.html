@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Jtimeseries Administration</title>
+<style type="text/css">
+body {
+	font: normal 12px Verdana, Arial, Sans-Serif;
+	text-align: left;
+	color: #000000;
+}
+
+pre {
+	background-color: #EEEEEE;
+	padding: 2px;
+	border: dashed #AAAAAA 1px;
+	margin: 6px;
+	text-align: left;
+}
+</style>
+</head>
+
+<body>
+	<h1>Jtimeseries Service Administration</h1>
+	<p>
+		This is administration documentation of Jtimeseries web service and
+		maintained by <a href="mailto:halo-dev@met.no">halo-dev@met.no</a>.
+		This file is under <b>/usr/share/doc/jtimeseries</b> if the debian
+		package is installed. The latest version should be available at <a
+			href="http://git.met.no/cgi-bin/gitweb.cgi?p=jtimeseries.git;a=blob_plain;f=jtimeseries/jtimeseries-webservices/src/doc/administration.html;hb=HEAD">
+			here.</a>
+	</p>
+	<h2>Building the Jtimeseries package</h2>
+	<p>Building the debian package is done through maven. Fetch the
+		source from git.met.no and run the following command.</p>
+	<pre>
+		<code>mvn -P prod package</code>
+	</pre>
+
+	<h2>Remove old package</h2>
+	<p>Please remove the old package when the major minor version is updated. You can skip this step if you install halo for the
+		first time on the server.</p>
+	<pre>
+		<code>sudo apt-get remove jtimeseries-webservices-[version]</code>
+	</pre>
+	<h2>Update the repository</h2>
+	<p>Please update the repository if you want to update a new
+		version of halo. You can skip this step if you install halo for the
+		first time on the server.</p>
+	<pre>
+		<code>sudo apt-get update && apt-get install jtimeseries-webservices-[version]</code>
+	</pre>
+
+	<h2>Install the Jtimeseries Package</h2>
+	<p>This debian package of the application should be available in
+		the met.no repositories.</p>
+	<pre>
+		<code>sudo apt-get install jtimeseries-webservices-[version]</code>
+	</pre>
+
+	<h2>Uninstall the Jtimeseries Package</h2>
+	<pre>
+		<code>sudo apt-get purge jtimeseries-webservices-[version]</code>
+	</pre>
+    
+    <h2>Configuration</h2>
+    
+    <p>This service requires Java 7. The package will install Java 7, but it needs to be set manually as default version.</p>
+    <pre><code>sudo update-alternatives --config java</code></pre>
+    <p>We also need to make sure Tomcat is configured to use the correct java version. Set the following property in  /etc/default/tomcat7 :</p>
+    <pre><code>JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64</code></pre>
+    <p>Remember to restart tomcat after configuration to apply the changes.</p>
+    
+    <p>Jtimeseries webapp comes with <a href="http://git.met.no/cgi-bin/gitweb.cgi?p=jtimeseries.git;a=blob_plain;f=jtimeseries/jtimeseries-api/src/main/resources/config/jtimeseries.properties;hb=HEAD">default configuration</a>. However, the default configuration can be overwritten by 
+        setting an environment variable 'JTIMESERIES_LOCAL_PROPERTIES'. One need to make the aforementioned environment variable available to tomcat.
+    This can be achieved by adding the environment variable to <b>/etc/default/tomcat7</b></p>
+
+	<h2>Start and stop Jtimeseries Application</h2>
+	<p>The Jtimeseries application is running under Tomcat 7. The
+		application starts and stops running when Tomcat server starts and
+		stop running.</p>
+	<p>Start Tomcat</p>
+	<pre>
+		<code>sudo /etc/init.d/tomcat7 start</code>
+	</pre>
+	<p>Stop Tomcat</p>
+	<pre>
+		<code>sudo /etc/init.d/tomcat7 stop</code>
+	</pre>
+	<p>Restart Tomcat</p>
+	<pre>
+		<code>sudo /etc/init.d/tomcat7 restart</code>
+	</pre>
+	<h2>Monitor processes</h2>
+	<p>Check status of Tomcat</p>
+	<pre>
+		<code>sudo /etc/init.d/tomcat7 status</code>
+	</pre>	
+	<h2>Memory</h2>
+	<p>
+		The default memory limit in Tomcat 7 is 128MB. For optimal
+		performance, we recommend to set the following environment in <b>/etc/default/tomcat7</b>
+	</p>
+	<pre>
+		<code>JAVA_OPTS="-Djava.awt.headless=true -Xmx1024m -XX:MaxPermSize=256m"</code>
+	</pre>
+	<h2>Check abnormal behavior</h2>
+	<p>Runtime errors are logged and can be found with the following
+		command.</p>
+	<pre>
+		<code>cat /var/log/tomcat7/catalina.out | grep SEVERE</code>
+	</pre>
+	<p>
+		This also includes <b>minor</b> error conditions.
+	</p>
+
+	<h2>Move from main machine to backup machine</h2>
+	<p>
+		<i>Not tested.</i><br /> Basically, follow installation instruction
+		on backup machine and switch domain name.
+	</p>
+
+	<h2>Move from backup machine to main machine</h2>
+	<p>
+		<i>Not tested.</i> <br /> Basically, ensure that processes are
+		running and switch domain names with backup machine.
+	</p>
+
+	<h2>Backup routines</h2>
+	<p>Except the source code, nothing to backup.</p>
+
+	<h2>Monitoring documentation</h2>
+	<p>The application can be monitored using nagios...</p>
+
+	<h2>Upgrade</h2>
+	<p>This is the second version. In the first version, the data to be
+		shown in the timeseries chart only comes from one specified data
+		source.</p>
+
+	<h2>Dependencies</h2>
+	<p>Must have:</p>
+	<ul>
+		<li>Tomcat 7</li>
+	</ul>
+	<ul>
+		<li>Api.met.no is running</li>
+	</ul>
+	<ul>
+		<li>Gcdb.met.no is running</li>
+	</ul>
+
+	<h2>Known errors</h2>
+	<p>None</p>
+
+	<h2>Changes</h2>
+	<p>This is the second version. the data to be shown in the
+		timeseries chart could comes from multiple data sources and the data
+		sources can be configured through URL command.</p>
+
+	<h2>Upgrade risks</h2>
+	<p>None</p>
+
+	<h2>Example URL Command to get a Timeseries Chart</h2>
+	<p>Please remember to change the two parameters, timeFrom and
+		timeTo, to valid time. Any time from current time to next two days is
+		available.</p>
+	<pre>
+		<code>http://myhost/jtimeseries-webservices/meteogram?latitude=59.9127&longitude=10.7461</code>
+	</pre>
+
+</body>
+</html>

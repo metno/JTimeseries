@@ -1,0 +1,108 @@
+release date=13:30 29.04.2016,version=2.24.2,urgency=low,by=Bjorn Larsen <bjornkl@met.no>,distribution=all
+ * Avoid trying to plott ocean temperature when not available
+release date=10:00 07.01.2015,version=2.24.1,urgency=low,by=Bjorn Larsen <bjornkl@met.no>,distribution=all
+ * More debug info
+release date=10:00 17.11.2014,version=2.24.0,urgency=low,by=Vegard Bones <vegardb@met.no>,distribution=all
+ * Added services for accessing stored forecasts
+release date=16:00 17.10.2014,version=2.23.0,urgency=low,by=Vegard Bones <vegardb@met.no>,distribution=all
+ * Added support for displaying time charts starting after start of xml document
+ * Cosmetic improvements
+release date=17:00 30.06.2014,version=2.22.0,urgency=low,by=Bjorn Larsen <bjonkl@met.no>,distribution=all
+ * Added support for locationforecast 1.9
+ * New symbol graphics
+release date=11:00 10.06.2014,version=2.21.0,urgency=low,by=Sarfraz Alam <sarfraza@met.no>,distribution=all
+ * Improved readability of date in meteogram
+release date=17:15 20.03.2014,version=2.20.0,urgency=low,by=Bjorn Larsen <bjornkl@met.no>,distribution=all
+ * Supports missing parameters in data source
+ * Improved logging
+release date=11:00 16.12.2013,version=2.19.1,urgency=low,by=Min Shi <mins@met.no>,distribution=all
+ * Remove negative scale from y-axis of wind, current and wave plots
+release date=10:00 16.12.2013,version=2.19.0,urgency=low,by=Min Shi <mins@met.no>,distribution=all
+ * Remove negative scale from y-axis of wind, current and wave plots
+release date=13:00 02.12.2013,version=2.18.1,urgency=low,by=Min Shi <mins@met.no>,distribution=all
+ * Add dew point temperature in meteogram and marinogram
+release date=10:00 12.11.2013,version=2.17.1,urgency=low,by=Min Shi <mins@met.no>,distribution=all
+ * Localize unit "knot" 
+release date=12:00 11.11.2013,version=2.17.0,urgency=low,by=Min Shi <mins@met.no>,distribution=all
+ * Localize unit "knot"
+release date=13:15 22.10.2013,version=2.16.0,urgency=low,by=Min Shi <mins@met.no>,distribution=all
+ * Add precipitation service
+release date=10:15 24.09.2013,version=2.15.0,urgency=low,by=Min Shi <mins@met.no>,distribution=all
+ * Improve smooth algorithm to smooth curves
+ * Add wind speed and direction in Meteogram
+ * Add wind speed and direction in Marinogram
+release date=12:15 04.09.2013,version=2.14.2,urgency=low,by=Bjørn Larsen <bjornkl@met.no>,distribution=all
+ * Removed unnecessary dependency on openjdk-7-jdk
+release date=10:15 03.09.2013,version=2.14.1,urgency=low,by=Bjørn Larsen <bjornkl@met.no>,distribution=all
+ * Fixed support for Java 7
+release date=16:15 02.09.2013,version=2.14.0,urgency=low,by=Bjørn Larsen <bjornkl@met.no>,distribution=all
+ * Added metadata REST-service
+release date=11:00 13.08.2013,version=2.13.0,urgency=low,by=Sarfraz Alam <sarfraza@met.no>,distribution=all
+ * Added default configuration overwritten capabilities.
+ * Added more dimension handling in netcdf files.
+release date=13:00 02.07.2013,version=2.12.0,urgency=low,by=Min Shi <mins@met.no>,distribution=all
+ * Add current speed and direction in Marinogram
+release date=14:00 02.05.2013,version=2.11.0,urgency=low,by=Bjørn Larsen <bjornkl@met.no>,distribution=all
+ * Fixed bugs concerning null pointer exception
+release date=13:00 22.03.2013,version=2.10.0,urgency=low,by=Min Shi <mins@met.no>,distribution=all
+ * Fixed bugs
+ * Styling could symbol in meteogram
+release date=14:00 15.03.2013,version=2.9.1,urgency=low,by=Øystein Torget <oysteint@met.no>,distribution=all
+ * Added Provided and Conflicts to Debian control file
+release date=14:00 15.03.2013,version=2.9.0,urgency=low,by=Sarfraz Alam <sarfraza@met.no>,distribution=all
+ * Added multi-language support.
+ * Fixed bugs.
+release date=08:00 14.03.2013,version=2.8.0,urgency=low,by=Vegard Bones <vegard.bones@met.no>,distribution=all
+ * netcdf plotter can now choose between requesting standard_name or variable name.
+release date=09:00 06.03.2013,version=2.7.3,urgency=low,by=Ã˜ystein Torget <oysteint@met.no>,distribution=all
+ * Incremented package version number due to multiple packages with same version in repo.
+release date=09:00 01.03.2013,version=2.7.2,urgency=low,by=BjÃ¸rn Larsen <bjornkl@met.no>,distribution=all
+ * Removed unused dependencies and changed debian versioning
+release date=09:00 27.02.2013,version=2.7.1,urgency=low,by=Vegard Bones <vegard.bones@met.no>,distribution=all
+ * Correcting package name
+release date=16:00 26.02.2013,version=2.7,urgency=low,by=Vegard Bones <vegard.bones@met.no>,distribution=all
+ * More robust display of netcdf files
+release date=15:00 12.02.2013,version=2.6,urgency=low,by=Sarfraz Alam <sarfraza@met.no>,distribution=all
+ * Added long term meteogram
+ * Added circle for no wind
+ * Bugs fixed
+release date=13:00 22.01.2013,version=2.5,urgency=low,by=Min Shi <mins@met.no>,distribution=all
+ * Refector code
+ * Bugs fixed
+release date=12:00 02.10.2012,version=2.4,urgency=low,by=Ã˜ystein Torget <oysteint@met.no>,distribution=all
+ * Fixed some label texts
+release date=14:00 11.09.2012,version=2.3,urgency=low,by=Min Shi <mins@met.no>,distribution=all
+ * Bugs fixed for setting timezone in marinogram
+release date=12:00 10.09.2012,version=2.2,urgency=low,by=Sarfraz Alam <sarfraz@met.no>,distribution=all
+ * Bugs fixed
+ * Added missed version number
+release date=12:00 10.09.2012,version=2.1,urgency=low,by=Sarfraz Alam <sarfraz@met.no>,distribution=all
+ * Fixed bugs
+release date=12:00 07.09.2012,version=2.0,urgency=low,by=Sarfraz Alam <sarfraz@met.no>,distribution=all
+ * Fixed proxy mapping
+release date=15:00 04.09.2012,version=1.9,urgency=low,by=Sarfraz Alam <sarfraz@met.no>,distribution=all
+ * Updated documentation.
+ * Added jtimeseries proxy
+release date=09:00 03.09.2012,version=1.8,urgency=low,by=Ã˜ystein Torget <oysteint@met.no>,distribution=all
+ * Fixed installation dir.
+release date=09:00 03.09.2012,version=1.7,urgency=low,by=Ã˜ystein Torget <oysteint@met.no>,distribution=all
+ * Updated package to Ubuntu 12.04.
+release date=13:00 01.08.2012,version=1.6,urgency=low,by=Sarfraz Alam <sarfraza@met.no>,distribution=all
+ * Added water temperature to marinogram
+release date=14:00 12.07.2012,version=1.5,urgency=low,by=Sarfraz Alam <sarfraza@met.no>,distribution=all
+ * Changed default time to UTC
+ * Added support for basic marinogram
+release date=13:00 12.07.2012,version=1.4,urgency=low,by=Min Shi <mins@met.no>,distribution=all
+ * Show meteogram in UTC time by default
+ * Add basic marinogram
+release date=14:00 22.05.2012,version=1.3,urgency=low,by=BjÃ¸rn Kristian Larsen <bjornkl@met.no>,distribution=all
+ * Fixed time issues
+ * Fixed wind arrow bugs
+release date=21:00 30.04.2012,version=1.2,urgency=low,by=Ã˜ystein Torget <oysteint@met.no>,distribution=all
+ * Packaging fix
+release date=21:00 30.04.2012,version=1.1,urgency=low,by=Ã˜ystein Torget <oysteint@met.no>,distribution=all
+ * Added wind and weather symbols
+ * Update web interface
+ * Added a "get capabilities" like documentation of the web interface
+release date=20:13 20.02.2012,version=1.0,urgency=low,by=BjÃ¸rn Kristian Larsen <bjornkl@met.no>,distribution=all
+ * initial release

@@ -1,0 +1,11 @@
+Package: [[name]]
+Version: [[version]]
+Provides: jtimeseries
+Conflicts: jtimeseries
+Section: contrib/misc
+Priority: optional
+Architecture: all
+Depends: openjdk-7-jre-headless, tomcat7, apache2
+Maintainer:  Norwegian Meteorological Institute met.no <halo-dev@met.no>
+Description: The web service for plotting meteogram and marinogram using jtimeseries-api.
+Distribution: This is the debian package for jtimeseries Web Application.

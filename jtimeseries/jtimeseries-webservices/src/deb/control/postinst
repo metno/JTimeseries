@@ -1,0 +1,26 @@
+echo "Enabling proxy_http in Apache..."
+a2enmod proxy_http
+echo "Done"
+
+echo "Creating Apache proxy config for JTimeseries..."
+
+PROXY_CONFIG='<Proxy>
+Order deny,allow
+Allow from all
+</Proxy>
+
+ProxyRequests       Off
+ProxyPreserveHost   On
+ProxyPass           /       http://localhost:8080/jtimeseries-webservices/
+ProxyPassReverse    /       http://localhost:8080/jtimeseries-webservices/
+'
+
+# use quotes around variables to keep newlines
+echo "$PROXY_CONFIG" > /etc/apache2/sites-available/jtimeseries
+
+a2ensite jtimeseries
+
+echo "Done"
+
+# restart the server to enable the proxy_http mod and the new site
+service apache2 reload
