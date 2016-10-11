@@ -471,9 +471,16 @@ public class MeteogramWrapper {
                 plotter.addMaxMinPercipitationBars(TimeBase.HOUR, "precipitation", pcMax, pcMin, maxPercipitationColor,
                         minPercipitationColor);
         } else {
-            NumberPhenomenon pc = model.getNumberPhenomenon(PhenomenonName.Precipitation.nameWithResolution(3));
-            if (!pc.getItems().isEmpty())
-                plotter.addPercipitationBars(TimeBase.HOUR_3, "precipitation", pc, maxPercipitationColor);
+        	TimeBase precipitationTimeBase = TimeBase.HOUR;
+        	NumberPhenomenon pc = model.getNumberPhenomenon(PhenomenonName.Precipitation.nameWithResolution(1));
+        	if (pc == null) {// does not have 1 hour precipitation, using 3 hours (locationforecast <= 1.9)
+        		precipitationTimeBase = TimeBase.HOUR_3;
+        		pc = model.getNumberPhenomenon(PhenomenonName.Precipitation.nameWithResolution(3));
+        	}
+            if (!pc.getItems().isEmpty()) {
+            	pc.filter(new LessOrEqualNumberFilter(0.0)); // avoid plotting empty bars with 0 numbers
+                plotter.addPercipitationBars(precipitationTimeBase, "precipitation", pc, maxPercipitationColor);
+            }
         }
 
     }
