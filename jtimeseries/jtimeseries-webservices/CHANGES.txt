@@ -1,3 +1,5 @@
+release date=13:00 13.10.2016,version=2.25.0,urgency=low,by=Sarfraz Alam <sarfraza@met.no>,distribution=all
+ * added support for 1h precipitation without min/max
 release date=13:30 29.04.2016,version=2.24.2,urgency=low,by=Bjorn Larsen <bjornkl@met.no>,distribution=all
  * Avoid trying to plott ocean temperature when not available
 release date=10:00 07.01.2015,version=2.24.1,urgency=low,by=Bjorn Larsen <bjornkl@met.no>,distribution=all
