@@ -15,10 +15,26 @@
     <properties>
         <majorMinorVersion>2.25</majorMinorVersion>
         <incrementalVersion>0</incrementalVersion>
+        <docker.registry></docker.registry>
+        <docker.push.image>false</docker.push.image>
+        <docker.host>http://localhost:2375</docker.host>
     </properties>
     <url>http://halo.met.no</url>
     <build>
         <finalName>jtimeseries-webservices</finalName>
+        <plugins>
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.4.13</version>
+                <configuration>
+                    <dockerHost>${docker.host}</dockerHost>
+                    <dockerDirectory>${project.basedir}</dockerDirectory>
+                    <imageName>${docker.registry}${project.artifactId}:${project.version}</imageName>
+                    <pushImage>${docker.push.image}</pushImage>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 
     <dependencies>
@@ -32,7 +48,7 @@
             <artifactId>servlet-api</artifactId>
             <version>2.5</version>
             <scope>provided</scope>
-        </dependency>		
+        </dependency>
         <dependency>
             <groupId>com.sun.faces</groupId>
             <artifactId>jsf-api</artifactId>
@@ -81,10 +97,10 @@
             <version>1.10</version>
         </dependency>
         <dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-client</artifactId>
-			<version>1.10</version>
-		</dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>1.10</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.xmlgraphics</groupId>
             <artifactId>batik-dom</artifactId>
