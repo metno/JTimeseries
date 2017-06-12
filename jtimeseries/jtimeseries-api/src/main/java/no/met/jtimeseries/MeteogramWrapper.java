@@ -479,7 +479,9 @@ public class MeteogramWrapper {
         	}
             if (!pc.getItems().isEmpty()) {
             	pc.filter(new LessOrEqualNumberFilter(0.0)); // avoid plotting empty bars with 0 numbers
-                plotter.addPercipitationBars(precipitationTimeBase, "precipitation", pc, maxPercipitationColor);
+            	if (!pc.getItems().isEmpty()) { // filter did not remove all values
+            		plotter.addPercipitationBars(precipitationTimeBase, "precipitation", pc, maxPercipitationColor);
+            	}
             }
         }
 
