@@ -14,7 +14,7 @@
     <version>${majorMinorVersion}.${incrementalVersion}</version>
     <properties>
         <majorMinorVersion>2.25</majorMinorVersion>
-        <incrementalVersion>0</incrementalVersion>
+        <incrementalVersion>1</incrementalVersion>
         <docker.registry>halo-registry.met.no:5000/</docker.registry>
         <docker.push.image>false</docker.push.image>
         <docker.host>http://localhost:2375</docker.host>
@@ -41,7 +41,7 @@
         <dependency>
             <groupId>no.met.jtimeseries</groupId>
             <artifactId>jtimeseries-api</artifactId>
-            <version>1.4</version>
+            <version>1.5</version>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>

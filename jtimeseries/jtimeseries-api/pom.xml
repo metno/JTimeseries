@@ -10,7 +10,7 @@
   </parent>
   <groupId>no.met.jtimeseries</groupId>
   <artifactId>jtimeseries-api</artifactId>
-  <version>1.4</version>
+  <version>1.5</version>
   <name>jtimeseries-api</name>
   <url>http://maven.apache.org</url>
     <build>
