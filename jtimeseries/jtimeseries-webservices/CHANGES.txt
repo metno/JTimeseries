@@ -1,5 +1,7 @@
+release date=13:00 15.06.2016,version=2.26.0,urgency=low,by=Sarfraz Alam <sarfraza@met.no>,distribution=all
+ * Update debian package dependencies.
 release date=13:00 15.06.2016,version=2.25.1,urgency=low,by=Bjorn Larsen <bjornkl@met.no>,distribution=all
- * Fixed issue with plotting precipitation without min/max outside arome 
+ * Fixed issue with plotting precipitation without min/max outside arome
 release date=13:00 13.10.2016,version=2.25.0,urgency=low,by=Sarfraz Alam <sarfraza@met.no>,distribution=all
  * added support for 1h precipitation without min/max
 release date=13:30 29.04.2016,version=2.24.2,urgency=low,by=Bjorn Larsen <bjornkl@met.no>,distribution=all
@@ -26,7 +28,7 @@ release date=10:00 16.12.2013,version=2.19.0,urgency=low,by=Min Shi <mins@met.no
 release date=13:00 02.12.2013,version=2.18.1,urgency=low,by=Min Shi <mins@met.no>,distribution=all
  * Add dew point temperature in meteogram and marinogram
 release date=10:00 12.11.2013,version=2.17.1,urgency=low,by=Min Shi <mins@met.no>,distribution=all
- * Localize unit "knot" 
+ * Localize unit "knot"
 release date=12:00 11.11.2013,version=2.17.0,urgency=low,by=Min Shi <mins@met.no>,distribution=all
  * Localize unit "knot"
 release date=13:15 22.10.2013,version=2.16.0,urgency=low,by=Min Shi <mins@met.no>,distribution=all

@@ -13,8 +13,8 @@
     <name>jtimeseries-webservices-${majorMinorVersion}</name>
     <version>${majorMinorVersion}.${incrementalVersion}</version>
     <properties>
-        <majorMinorVersion>2.25</majorMinorVersion>
-        <incrementalVersion>1</incrementalVersion>
+        <majorMinorVersion>2.26</majorMinorVersion>
+        <incrementalVersion>0</incrementalVersion>
         <docker.registry>halo-registry.met.no:5000/</docker.registry>
         <docker.push.image>false</docker.push.image>
         <docker.host>http://localhost:2375</docker.host>
@@ -153,7 +153,7 @@
                     <plugin>
                         <artifactId>jdeb</artifactId>
                         <groupId>org.vafer</groupId>
-                        <version>0.9</version>
+                        <version>1.4</version>
                         <executions>
                             <execution>
                                 <phase>package</phase>
@@ -168,7 +168,7 @@
                                             <type>file</type>
                                             <mapper>
                                                 <type>perm</type>
-                                                <prefix>/var/lib/tomcat7/webapps</prefix>
+                                                <prefix>/var/lib/tomcat8/webapps</prefix>
                                             </mapper>
                                         </data>
                                         <data>
@@ -184,11 +184,11 @@
                                             <type>directory</type>
                                             <mapper>
                                                 <type>perm</type>
-                                                <prefix>/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/fonts</prefix>
+                                                <prefix>/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/fonts</prefix>
                                             </mapper>
                                         </data>
                                     </dataSet>
-                                    <installDir>/var/lib/tomcat7/webapps</installDir>
+                                    <installDir>/var/lib/tomcat8/webapps</installDir>
                                 </configuration>
                             </execution>
                         </executions>
