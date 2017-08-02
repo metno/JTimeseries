@@ -1,3 +1,5 @@
+release date=13:00 02.08.2017,version=2.26.1,urgency=low,by=Sarfraz Alam <sarfraza@met.no>,distribution=all
+ * Support https
 release date=13:00 15.06.2016,version=2.26.0,urgency=low,by=Sarfraz Alam <sarfraza@met.no>,distribution=all
  * Update debian package dependencies.
 release date=13:00 15.06.2016,version=2.25.1,urgency=low,by=Bjorn Larsen <bjornkl@met.no>,distribution=all

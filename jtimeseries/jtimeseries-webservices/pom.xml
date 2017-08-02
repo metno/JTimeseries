@@ -14,10 +14,11 @@
     <version>${majorMinorVersion}.${incrementalVersion}</version>
     <properties>
         <majorMinorVersion>2.26</majorMinorVersion>
-        <incrementalVersion>0</incrementalVersion>
+        <incrementalVersion>1</incrementalVersion>
         <docker.registry>halo-registry.met.no:5000/</docker.registry>
         <docker.push.image>false</docker.push.image>
         <docker.host>http://localhost:2375</docker.host>
+        <transport.guarantee>NONE</transport.guarantee>
     </properties>
     <url>http://halo.met.no</url>
     <build>
@@ -32,6 +33,21 @@
                     <dockerDirectory>${project.basedir}</dockerDirectory>
                     <imageName>${docker.registry}${project.artifactId}:${project.version}</imageName>
                     <pushImage>${docker.push.image}</pushImage>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
+                    <webResources>
+                        <resource>
+                            <filtering>true</filtering>
+                            <directory>${basedir}/src/main/webapp/WEB-INF</directory>
+                            <targetPath>WEB-INF</targetPath>
+                        </resource>
+                    </webResources>
                 </configuration>
             </plugin>
         </plugins>
@@ -136,16 +152,21 @@
     <profiles>
         <profile>
             <id>prod</id>
+            <properties>
+                <transport.guarantee>CONFIDENTIAL</transport.guarantee>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
                         <artifactId>maven-war-plugin</artifactId>
                         <version>2.1.1</version>
                         <configuration>
+                            <filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
                             <webResources>
                                 <resource>
-                                    <directory>${basedir}/src/main/java</directory>
-                                    <targetPath>/WEB-INF/src</targetPath>
+                                    <filtering>true</filtering>
+                                    <directory>${basedir}/src/main/webapp/WEB-INF</directory>
+                                    <targetPath>WEB-INF</targetPath>
                                 </resource>
                             </webResources>
                         </configuration>
