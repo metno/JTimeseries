@@ -208,11 +208,11 @@ public class TimeSeriesService {
             LogUtils.logException(logger, "Failed to parse provided data", ex);
         } catch (DocumentException ex) {
             LogUtils.logException(logger, "Failed to parse provided data", ex);
-        } catch (SAXException ex) {
-            Logger.getLogger(TimeSeriesService.class.getName()).log(Level.WARNING, "Invalid schema from api.met.no", ex);
-        } catch (ValidationException ex) {
-            Logger.getLogger(TimeSeriesService.class.getName()).log(Level.WARNING, ex.getMessage(), ex);
-            return Response.status(Response.Status.BAD_REQUEST).build();
+//        } catch (SAXException ex) {
+//            Logger.getLogger(TimeSeriesService.class.getName()).log(Level.WARNING, "Invalid schema from api.met.no", ex);            
+//        } catch (ValidationException ex) {
+//            Logger.getLogger(TimeSeriesService.class.getName()).log(Level.WARNING, ex.getMessage(), ex);
+//            return Response.status(Response.Status.BAD_REQUEST).build();
         }
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
