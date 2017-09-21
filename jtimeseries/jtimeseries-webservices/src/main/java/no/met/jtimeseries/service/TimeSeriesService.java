@@ -189,9 +189,10 @@ public class TimeSeriesService {
                 return Response.status(Response.Status.BAD_REQUEST).build();        
         
         try {
-            Schema schema = getLocationForecastSchema();
-            Validator validator = new LocationForecastValidator(schema);
-            validator.validate(new SAXSource(new InputSource(new StringReader(forecast))));
+// Validation fails when new parameters are added, too strict        	
+//            Schema schema = getLocationForecastSchema();
+//            Validator validator = new LocationForecastValidator(schema);
+//            validator.validate(new SAXSource(new InputSource(new StringReader(forecast))));
         
             //posted data is ok.
         	int hh = ("short".equalsIgnoreCase(term)) ? 
@@ -261,10 +262,10 @@ public class TimeSeriesService {
             ClientResponse response = webResource.type(MediaType.APPLICATION_XML).get(ClientResponse.class);
             String forecast = IOUtils.toString(response.getEntityInputStream());
             
-            //first validate
-            Schema schema = getLocationForecastSchema();
-            Validator validator = new LocationForecastValidator(schema);
-            validator.validate(new SAXSource(new InputSource(new StringReader(forecast))));
+// validation fails when new parameters are added, too strict
+//            Schema schema = getLocationForecastSchema();
+//            Validator validator = new LocationForecastValidator(schema);
+//            validator.validate(new SAXSource(new InputSource(new StringReader(forecast))));
             
         	// forecast must become a resource, or getModel must handle xml strings
         	GenericDataModel model = MeteogramWrapper.getModel(new StringReader(forecast));
