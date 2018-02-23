@@ -1,4 +1,4 @@
-/*******************************************************************************
+/** *****************************************************************************
  *   Copyright (C) 2016 MET Norway
  *   Contact information:
  *   Norwegian Meteorological Institute
@@ -18,7 +18,7 @@
  *   You should have received a copy of the GNU General Public License
  *   along with jTimeseries; if not, write to the Free Software
  *   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- *******************************************************************************/
+ ****************************************************************************** */
 package no.met.jtimeseries;
 
 import java.awt.BasicStroke;
@@ -78,6 +78,7 @@ import org.jfree.ui.TextAnchor;
  * A wrapper class for creating meteogram
  */
 public class MeteogramWrapper {
+
     private static final Logger logger = Logger.getLogger(MeteogramWrapper.class.getSimpleName());
     // values according to current halo (full width) size
     public static final int DEFAULT_HEIGHT = 300;
@@ -106,7 +107,7 @@ public class MeteogramWrapper {
         ForecastParser forecastParser = new ForecastParser(locationForecastParser, resource);
         return forecastParser.populateModelWithData();
     }
-    
+
     public static GenericDataModel getModel(Reader xmlReader) throws ParseException, IOException, DocumentException {
 
         GenericDataModel model = new GenericDataModel();
@@ -115,15 +116,14 @@ public class MeteogramWrapper {
 
         SAXReader saxReader = new SAXReader();
         Document document = saxReader.read(xmlReader);
-        
+
         locationForecastParser.parse(document);
 
         return model;
     }
 
-
     public static GenericDataModel getModel(Location location, TimePeriod timePeriod) throws ParseException, IOException {
-    	return getModel(LocationForecastAddressFactory.getURL(location).toString(), timePeriod);
+        return getModel(LocationForecastAddressFactory.getURL(location).toString(), timePeriod);
     }
 
     public JFreeChart createMeteogram(ChartPlottingInfo cpi, int numHours) {
@@ -144,50 +144,48 @@ public class MeteogramWrapper {
 
     /**
      * Get the nearest full hour where UTC hour % snapTo == 0
+     *
      * @param date Date to adapt
      * @param snapTo Hour to snap to
      * @return
      */
     private static Date adapt(Date date, int snapTo) {
-    	Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-    	cal.setTime(date);
-    	cal.set(Calendar.MINUTE, 0);
-    	cal.set(Calendar.SECOND, 0);
-    	cal.set(Calendar.MILLISECOND, 0);
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        cal.setTime(date);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
 
-    	int offset = (snapTo - (cal.get(Calendar.HOUR) % snapTo));
-    	cal.add(Calendar.HOUR, offset);
-    	
-    	return cal.getTime();
+        int offset = (snapTo - (cal.get(Calendar.HOUR) % snapTo));
+        cal.add(Calendar.HOUR, offset);
+
+        return cal.getTime();
     }
-    
-    
+
     public JFreeChart createShortTermMeteogram(ChartPlottingInfo cpi, int numHours) {
-    	return createShortTermMeteogram(cpi, new TimePeriod(new Date(), numHours));
+        return createShortTermMeteogram(cpi, new TimePeriod(new Date(), numHours));
     }
-    
+
     public JFreeChart createShortTermMeteogram(ChartPlottingInfo cpi, TimePeriod timePeriod) {
 
-    	int snapTo = 3;
+        int snapTo = 3;
 
-    	TimePeriod periodToUse = timePeriod.adapt(snapTo);
+        TimePeriod periodToUse = timePeriod.adapt(snapTo);
 
-    	try {
-	        GenericDataModel model = getModel(new Location(cpi.getLongitude(), cpi.getLatitude()), periodToUse);
+        try {
+            GenericDataModel model = getModel(new Location(cpi.getLongitude(), cpi.getLatitude()), periodToUse);
 
-	    	return createShortTermMeteogram(model, periodToUse, cpi);
-	    } 
-    	catch (Exception exception) {
-	        LogUtils.logException(logger, exception.getMessage(), exception);
-	        return Utility.createErrorChart(cpi.getWidth());
-	    }
+            return createShortTermMeteogram(model, periodToUse, cpi);
+        } catch (Exception exception) {
+            LogUtils.logException(logger, exception.getMessage(), exception);
+            return Utility.createErrorChart(cpi.getWidth());
+        }
     }
-    
+
     /**
      * Generate meteogram chart with selected parameters
-     * 
-     * @throws ParseException
-     *             if data parsing fails
+     *
+     * @throws ParseException if data parsing fails
      */
     public JFreeChart createShortTermMeteogram(GenericDataModel model, TimePeriod timePeriod, ChartPlottingInfo cpi) {
 
@@ -207,10 +205,10 @@ public class MeteogramWrapper {
         if (cpi.isShowDewpointTemperature()) {
             plotDewPointTemperature(model, plotter);
         }
-        
+
         //reset the label and range when both temperature show
         if (cpi.isShowAirTemperature() && cpi.isShowDewpointTemperature()) {
-            resetBoundForTemperature(model,plotter);
+            resetBoundForTemperature(model, plotter);
         }
 
         if (cpi.isShowPressure()) {
@@ -276,31 +274,28 @@ public class MeteogramWrapper {
     }
 
     public JFreeChart createLongTermMeteogram(ChartPlottingInfo cpi, int numHours) {
-    	return createLongTermMeteogram(cpi, new TimePeriod(new Date(), numHours));
+        return createLongTermMeteogram(cpi, new TimePeriod(new Date(), numHours));
     }
 
-    
     public JFreeChart createLongTermMeteogram(ChartPlottingInfo cpi, TimePeriod timePeriod) {
 
-    	int snapTo = 6;
+        int snapTo = 6;
 
-    	TimePeriod periodToUse = timePeriod.adapt(snapTo);
+        TimePeriod periodToUse = timePeriod.adapt(snapTo);
 
-    	
-    	// If we don't modify end time, the chart will be wrong!
-    	periodToUse = new TimePeriod(periodToUse.getStart(), 
-    			Utility.getDateWithAddedHours(periodToUse.getEnd(), snapTo*-2));
-    	
-    	try {
-    		GenericDataModel model = getModel(new Location(cpi.getLongitude(), cpi.getLatitude()), periodToUse);
-    		return createLongTermMeteogram(model, periodToUse, cpi);
-	    } 
-    	catch (Exception exception) {
-	        LogUtils.logException(logger, exception.getMessage(), exception);
-	        return Utility.createErrorChart(cpi.getWidth());
-	    }
+        // If we don't modify end time, the chart will be wrong!
+        periodToUse = new TimePeriod(periodToUse.getStart(),
+                Utility.getDateWithAddedHours(periodToUse.getEnd(), snapTo * -2));
+
+        try {
+            GenericDataModel model = getModel(new Location(cpi.getLongitude(), cpi.getLatitude()), periodToUse);
+            return createLongTermMeteogram(model, periodToUse, cpi);
+        } catch (Exception exception) {
+            LogUtils.logException(logger, exception.getMessage(), exception);
+            return Utility.createErrorChart(cpi.getWidth());
+        }
     }
-    
+
     public JFreeChart createLongTermMeteogram(GenericDataModel model, TimePeriod timePeriod, ChartPlottingInfo cpi) {
 
         ChartPlotter plotter = new ChartPlotter();
@@ -315,18 +310,18 @@ public class MeteogramWrapper {
         if (cpi.isShowAirTemperature() || cpi.isShowDewpointTemperature()) {
             filterLongTermTemperature(model, startTime);
         }
-        
+
         if (cpi.isShowAirTemperature()) {
             plotTemperature(model, plotter);
         }
-        
+
         if (cpi.isShowDewpointTemperature()) {
             plotDewPointTemperature(model, plotter);
         }
-        
+
         //reset the label and range when both temperature show
         if (cpi.isShowAirTemperature() && cpi.isShowDewpointTemperature()) {
-            resetBoundForTemperature(model,plotter);
+            resetBoundForTemperature(model, plotter);
         }
 
         if (cpi.isShowPressure()) {
@@ -380,40 +375,40 @@ public class MeteogramWrapper {
             plotCloudSymbols(model, plotter);
         }
 
-        
         plotDomainRangeAndMarkers(model, plotter, cpi, 6, timePeriod);
 
         // create the chart
         return plotter.createOverlaidChart("");
 
     }
-    
+
     /**
      * Reset bound when both air temperature and dew point temperature are shown
+     *
      * @param model
      * @param plotter
      */
     private void resetBoundForTemperature(GenericDataModel model, ChartPlotter plotter) {
         NumberPhenomenon temperature = model.getNumberPhenomenon(PhenomenonName.AirTemperature.toString());
         NumberPhenomenon dewtemperature = model.getNumberPhenomenon(PhenomenonName.dewPointTemperature.toString());
-        double minValue=temperature.getMinValue()<=dewtemperature.getMinValue()?temperature.getMinValue():dewtemperature.getMinValue();
-        double maxValue=temperature.getMaxValue()>=dewtemperature.getMaxValue()?temperature.getMaxValue():dewtemperature.getMaxValue();
-        
-        NumberAxis numberAxis1=(NumberAxis)plotter.getPlot().getRangeAxis(plotter.getPlotIndex()-2);
+        double minValue = temperature.getMinValue() <= dewtemperature.getMinValue() ? temperature.getMinValue() : dewtemperature.getMinValue();
+        double maxValue = temperature.getMaxValue() >= dewtemperature.getMaxValue() ? temperature.getMaxValue() : dewtemperature.getMaxValue();
+
+        NumberAxis numberAxis1 = (NumberAxis) plotter.getPlot().getRangeAxis(plotter.getPlotIndex() - 2);
         numberAxis1.setLabel(messages.getString("parameter.temperature"));
         ChartPlotter.setAxisBound(numberAxis1, maxValue, minValue, 8, BACKGROUND_LINES);
 
-        NumberAxis numberAxis2=(NumberAxis)plotter.getPlot().getRangeAxis(plotter.getPlotIndex()-1);
+        NumberAxis numberAxis2 = (NumberAxis) plotter.getPlot().getRangeAxis(plotter.getPlotIndex() - 1);
         numberAxis2.setLabel(messages.getString("parameter.temperature"));
         numberAxis2.setUpperBound(numberAxis1.getUpperBound());
         numberAxis2.setLowerBound(numberAxis1.getLowerBound());
         numberAxis2.setTickUnit(numberAxis1.getTickUnit());
         numberAxis2.setVisible(false);
-        
+
         //Add labels on the curves
         NumberValueItem airItem = (NumberValueItem) temperature.getItems().get(0);
         NumberValueItem dewpointItem = (NumberValueItem) dewtemperature.getItems().get(0);
-        
+
         plotter.getPlot().getRenderer().addAnnotation(ChartPlotter.
                 createTextAnnotation(messages.getString("label.air"), temperature.getStartTime().getTime(),
                         airItem.getValue() + 0.1d, TextAnchor.BOTTOM_LEFT, Color.RED), Layer.BACKGROUND);
@@ -432,7 +427,7 @@ public class MeteogramWrapper {
         plotter.addDomainGridLines(interval);
         plotter.setDomainRange(timePeriod.getStart(), timePeriod.getEnd());
         plotter.setDomainDateFormat(TimeZone.getTimeZone(cpi.getTimezone()), "HH");
-        
+
         // add markers
         plotter.addDomainMarkers(timePeriod.getStart(), timePeriod.getEnd(), TimeZone.getTimeZone(cpi.getTimezone()), locale);
 
@@ -467,21 +462,22 @@ public class MeteogramWrapper {
         if (hasMinMaxPrecipitation(model, 1)) {
             NumberPhenomenon pcMin = model.getNumberPhenomenon(PhenomenonName.PrecipitationMin.nameWithResolution(1));
             NumberPhenomenon pcMax = model.getNumberPhenomenon(PhenomenonName.PrecipitationMax.nameWithResolution(1));
-            if (!pcMin.getItems().isEmpty() || !pcMax.getItems().isEmpty())
+            if (!pcMin.getItems().isEmpty() || !pcMax.getItems().isEmpty()) {
                 plotter.addMaxMinPercipitationBars(TimeBase.HOUR, "precipitation", pcMax, pcMin, maxPercipitationColor,
-                        minPercipitationColor);
+                        minPercipitationColor, pcMax.getMaxValue());
+            }
         } else {
-        	TimeBase precipitationTimeBase = TimeBase.HOUR;
-        	NumberPhenomenon pc = model.getNumberPhenomenon(PhenomenonName.Precipitation.nameWithResolution(1));
-        	if (pc == null) {// does not have 1 hour precipitation, using 3 hours (locationforecast <= 1.9)
-        		precipitationTimeBase = TimeBase.HOUR_3;
-        		pc = model.getNumberPhenomenon(PhenomenonName.Precipitation.nameWithResolution(3));
-        	}
+            TimeBase precipitationTimeBase = TimeBase.HOUR;
+            NumberPhenomenon pc = model.getNumberPhenomenon(PhenomenonName.Precipitation.nameWithResolution(1));
+            if (pc == null) {// does not have 1 hour precipitation, using 3 hours (locationforecast <= 1.9)
+                precipitationTimeBase = TimeBase.HOUR_3;
+                pc = model.getNumberPhenomenon(PhenomenonName.Precipitation.nameWithResolution(3));
+            }
             if (!pc.getItems().isEmpty()) {
-            	pc.filter(new LessOrEqualNumberFilter(0.0)); // avoid plotting empty bars with 0 numbers
-            	if (!pc.getItems().isEmpty()) { // filter did not remove all values
-            		plotter.addPercipitationBars(precipitationTimeBase, "precipitation", pc, maxPercipitationColor);
-            	}
+                pc.filter(new LessOrEqualNumberFilter(0.0)); // avoid plotting empty bars with 0 numbers
+                if (!pc.getItems().isEmpty()) { // filter did not remove all values
+                    plotter.addPercipitationBars(precipitationTimeBase, "precipitation", pc, maxPercipitationColor, pc.getMaxValue());
+                }
             }
         }
 
@@ -534,24 +530,31 @@ public class MeteogramWrapper {
 
             NumberPhenomenon pcMin = model.getNumberPhenomenon(PhenomenonName.PrecipitationMin.nameWithResolution(6));
             NumberPhenomenon pcMax = model.getNumberPhenomenon(PhenomenonName.PrecipitationMax.nameWithResolution(6));
+            NumberPhenomenon pc6 = model.getNumberPhenomenon(PhenomenonName.Precipitation.nameWithResolution(6));
 
-            if (!pcMin.getItems().isEmpty() || !pcMax.getItems().isEmpty())
+            if (!pcMin.getItems().isEmpty() || !pcMax.getItems().isEmpty()) {
                 plotter.addMaxMinPercipitationBars(TimeBase.HOUR_6, "precipitation", pcMax, pcMin,
-                        maxPercipitationColor, minPercipitationColor);
+                        maxPercipitationColor, minPercipitationColor, maxOf(pcMax, pc6));
+            }
 
             // the max/min precipitation does not cover the entire long term
             // range so need to supplement with
             // normal precipitation values.
-            NumberPhenomenon pc6 = model.getNumberPhenomenon(PhenomenonName.Precipitation.nameWithResolution(6));
-            if (!pc6.getItems().isEmpty())
-                plotter.addPercipitationBars(TimeBase.HOUR_6, "precipitation", pc6, maxPercipitationColor);
+            if (!pc6.getItems().isEmpty()) {
+                plotter.addPercipitationBars(TimeBase.HOUR_6, "precipitation", pc6, maxPercipitationColor, pc6.getMaxValue());
+            }
         } else {
 
             NumberPhenomenon pc6 = model.getNumberPhenomenon(PhenomenonName.Precipitation.nameWithResolution(6));
-            if (!pc6.getItems().isEmpty())
-                plotter.addPercipitationBars(TimeBase.HOUR_6, "precipitation", pc6, maxPercipitationColor);
+            if (!pc6.getItems().isEmpty()) {
+                plotter.addPercipitationBars(TimeBase.HOUR_6, "precipitation", pc6, maxPercipitationColor, pc6.getMaxValue());
+            }
         }
 
+    }
+
+    private double maxOf(NumberPhenomenon np1, NumberPhenomenon np2) {
+        return Math.max(np1.getMaxValue(), np2.getMaxValue());
     }
 
     private boolean hasMinMaxPrecipitation(GenericDataModel model, int timeResolution) {
@@ -618,7 +621,7 @@ public class MeteogramWrapper {
         }
         double maxValue = windSpeed.getMaxValue();
         double minValue = windSpeed.getMinValue();
-        
+
         ChartPlotter.setAxisBound(numberAxis, maxValue, minValue, 8, BACKGROUND_LINES);
 
         PlotStyle plotStyle = new PlotStyle.Builder("Wind").seriesColor(windSpeedColor).plusDegreeColor(windSpeedColor)
@@ -661,9 +664,9 @@ public class MeteogramWrapper {
         numberAxis.setLabel(messages.getString("parameter.airTemperature") + " (\u00B0 C)");
         double maxValue = temperature.getMaxValue();
         double minValue = temperature.getMinValue();
-        
+
         ChartPlotter.setAxisBound(numberAxis, maxValue, minValue, 8, BACKGROUND_LINES);
-        
+
         PlotStyle plotStyle = new PlotStyle.Builder("AirTemperature").seriesColor(temperatureColor)
                 .plusDegreeColor(temperatureColor).spline(SplineStyle.HYBRID).stroke(new BasicStroke(2.0f))
                 .numberAxis(numberAxis).build();
@@ -671,12 +674,13 @@ public class MeteogramWrapper {
         plotter.addThresholdLineChart(TimeBase.SECOND, temperature, plotStyle);
 
     }
-    
+
     private void plotDewPointTemperature(GenericDataModel model, ChartPlotter plotter) {
 
         NumberPhenomenon temperature = model.getNumberPhenomenon(PhenomenonName.dewPointTemperature.toString());
-        if (temperature == null) 
-            throw new NullPointerException("Missing parameter ["+messages.getString("parameter.dewPointTemperature")+"]");
+        if (temperature == null) {
+            throw new NullPointerException("Missing parameter [" + messages.getString("parameter.dewPointTemperature") + "]");
+        }
         Color temperatureColor = Color.ORANGE;
         // number axis to be used for wind speed plot
         NumberAxis numberAxis = new NumberAxis();
@@ -685,9 +689,9 @@ public class MeteogramWrapper {
         numberAxis.setLabel(messages.getString("parameter.dewPointTemperature") + " (\u00B0 C)");
         double maxValue = temperature.getMaxValue();
         double minValue = temperature.getMinValue();
-        
+
         ChartPlotter.setAxisBound(numberAxis, maxValue, minValue, 8, BACKGROUND_LINES);
-        
+
         PlotStyle plotStyle = new PlotStyle.Builder("Dew point").seriesColor(temperatureColor)
                 .plusDegreeColor(temperatureColor).spline(SplineStyle.HYBRID).stroke(new BasicStroke(2.0f))
                 .numberAxis(numberAxis).build();
@@ -700,15 +704,16 @@ public class MeteogramWrapper {
         NumberPhenomenon temperature = model.getNumberPhenomenon(PhenomenonName.AirTemperature.toString());
         temperature.filter(new BeforeDateFilter(startTime));
         NumberPhenomenon dewpointTemperature = model.getNumberPhenomenon(PhenomenonName.dewPointTemperature.toString());
-        if (dewpointTemperature != null)
+        if (dewpointTemperature != null) {
             dewpointTemperature.filter(new BeforeDateFilter(startTime));
+        }
     }
 
     private void filterLongTermPressure(GenericDataModel model, Date startTime) {
         NumberPhenomenon pressure = model.getNumberPhenomenon(PhenomenonName.Pressure.toString());
         pressure.filter(new BeforeDateFilter(startTime));
     }
-    
+
     private void filterLongTermWindSpeed(GenericDataModel model, Date startTime) {
         NumberPhenomenon windSpeed = model.getNumberPhenomenon(PhenomenonName.WindSpeedMPS.toString());
         windSpeed.filter(new BeforeDateFilter(startTime));
@@ -718,11 +723,9 @@ public class MeteogramWrapper {
 
     /**
      * Adding Wind-symbols to the plot
-     * 
-     * @param model
-     *            datamodel to fetch the wind data from
-     * @param plotter
-     *            ChartPlotter to add the symbols on
+     *
+     * @param model datamodel to fetch the wind data from
+     * @param plotter ChartPlotter to add the symbols on
      */
     private void plotWindSymbols(GenericDataModel model, ChartPlotter plotter) {
         NumberPhenomenon windDirection = model.getNumberPhenomenon(PhenomenonName.WindDirectionDegree.toString());
@@ -744,11 +747,9 @@ public class MeteogramWrapper {
 
     /**
      * Filter cloud data before plotting
-     * 
-     * @param model
-     *            datamodel to fetch the wind data from
-     * @param symbolTimes
-     *            used to filter symbols if not null
+     *
+     * @param model datamodel to fetch the wind data from
+     * @param symbolTimes used to filter symbols if not null
      */
     private void filterCloudSymbols(GenericDataModel model, List<Date> symbolTimes) {
         NumberPhenomenon highClouds = model.getNumberPhenomenon(PhenomenonName.HighCloud.toString());
@@ -786,9 +787,9 @@ public class MeteogramWrapper {
                     .showWindDirection(true).windSpeedUnit("knop").build();
 
             MeteogramWrapper wrapper = new MeteogramWrapper("en");
-            
+
             jchart = wrapper.createMeteogram(cpi, SHORT_TERM_HOURS);
-            
+
             ChartFrame frame = new ChartFrame(jchart, new java.awt.Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
             frame.pack();
             frame.setVisible(true);
