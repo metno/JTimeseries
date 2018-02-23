@@ -188,11 +188,11 @@ public class TimeSeriesService {
         }
 
         try {
-            Schema schema = getLocationForecastSchema();
-            Validator validator = new LocationForecastValidator(schema);
-            validator.validate(new SAXSource(new InputSource(new StringReader(forecast))));
+// Validation fails when new parameters are added, too strict        	
+//            Schema schema = getLocationForecastSchema();
+//            Validator validator = new LocationForecastValidator(schema);
+//            validator.validate(new SAXSource(new InputSource(new StringReader(forecast))));
 
-            //posted data is ok.
             int hh = ("short".equalsIgnoreCase(term))
                     ? MeteogramWrapper.SHORT_TERM_HOURS : MeteogramWrapper.LONG_TERM_HOURS;
             GenericDataModel model = MeteogramWrapper.getModel(new StringReader(forecast));
@@ -208,11 +208,11 @@ public class TimeSeriesService {
             LogUtils.logException(logger, "Failed to parse provided data", ex);
         } catch (DocumentException ex) {
             LogUtils.logException(logger, "Failed to parse provided data", ex);
-        } catch (SAXException ex) {
-            Logger.getLogger(TimeSeriesService.class.getName()).log(Level.WARNING, "Invalid schema from api.met.no", ex);
-        } catch (ValidationException ex) {
-            Logger.getLogger(TimeSeriesService.class.getName()).log(Level.WARNING, ex.getMessage(), ex);
-            return Response.status(Response.Status.BAD_REQUEST).build();
+//        } catch (SAXException ex) {
+//            Logger.getLogger(TimeSeriesService.class.getName()).log(Level.WARNING, "Invalid schema from api.met.no", ex);            
+//        } catch (ValidationException ex) {
+//            Logger.getLogger(TimeSeriesService.class.getName()).log(Level.WARNING, ex.getMessage(), ex);
+//            return Response.status(Response.Status.BAD_REQUEST).build();
         }
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
@@ -261,10 +261,10 @@ public class TimeSeriesService {
             ClientResponse response = webResource.type(MediaType.APPLICATION_XML).get(ClientResponse.class);
             String forecast = IOUtils.toString(response.getEntityInputStream());
 
-            //first validate
-            Schema schema = getLocationForecastSchema();
-            Validator validator = new LocationForecastValidator(schema);
-            validator.validate(new SAXSource(new InputSource(new StringReader(forecast))));
+// validation fails when new parameters are added, too strict
+//            Schema schema = getLocationForecastSchema();
+//            Validator validator = new LocationForecastValidator(schema);
+//            validator.validate(new SAXSource(new InputSource(new StringReader(forecast))));
 
             // forecast must become a resource, or getModel must handle xml strings
             GenericDataModel model = MeteogramWrapper.getModel(new StringReader(forecast));
