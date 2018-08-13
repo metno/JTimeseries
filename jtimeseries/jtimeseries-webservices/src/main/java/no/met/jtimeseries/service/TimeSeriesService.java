@@ -230,6 +230,7 @@ public class TimeSeriesService {
             @QueryParam("dewpointTemperature") @DefaultValue("true") boolean showDewpointTemperature,
             @QueryParam("pressure") @DefaultValue("true") boolean showPressure,
             @QueryParam("percipitation") @DefaultValue("true") boolean showPercipitation,
+            @QueryParam("accumulatedPrecipitation") @DefaultValue("true") boolean showAccumulatedPrecipitation,
             @QueryParam("windSymbol") @DefaultValue("true") boolean showWindSymbol,
             @QueryParam("weatherSymbol") @DefaultValue("true") boolean showWeatherSymbol,
             @QueryParam("cloudSymbol") @DefaultValue("true") boolean showCloudSymbol,
@@ -245,8 +246,8 @@ public class TimeSeriesService {
         ChartPlottingInfo cpi = new ChartPlottingInfo.Builder(0, 0).altitude(0).width(width)
                 .height(height).showAirTemperature(showTemperature).showPressure(showPressure).timezone(timezone)
                 .showCloudSymbol(showCloudSymbol).showWeatherSymbol(showWeatherSymbol).showWindSymbol(showWindSymbol)
-                .showPrecipitation(showPercipitation).showWindDirection(showWindDirection).showWindSpeed(showWindSpeed)
-                .windSpeedUnit(windSpeedUnit).showDewpointTemperature(showDewpointTemperature).language(language).build();
+                .showPrecipitation(showPercipitation).showAccumulatedPrecipitation(showAccumulatedPrecipitation).showWindDirection(showWindDirection)
+                .showWindSpeed(showWindSpeed).windSpeedUnit(windSpeedUnit).showDewpointTemperature(showDewpointTemperature).language(language).build();
 
         AbstractChartSaver saver = chartSavers.get(format.toLowerCase());
         if (saver == null) {
@@ -315,6 +316,7 @@ public class TimeSeriesService {
             @QueryParam("dewpointTemperature") @DefaultValue("true") boolean showDewpointTemperature,
             @QueryParam("pressure") @DefaultValue("true") boolean showPressure,
             @QueryParam("percipitation") @DefaultValue("true") boolean showPercipitation,
+            @QueryParam("accumulatedPrecipitation") @DefaultValue("true") boolean showAccumulatedPrecipitation,
             @QueryParam("windSymbol") @DefaultValue("true") boolean showWindSymbol,
             @QueryParam("weatherSymbol") @DefaultValue("true") boolean showWeatherSymbol,
             @QueryParam("cloudSymbol") @DefaultValue("true") boolean showCloudSymbol,
@@ -334,7 +336,8 @@ public class TimeSeriesService {
         ChartPlottingInfo cpi = new ChartPlottingInfo.Builder(longitude, latitude).altitude(altitude).width(width)
                 .height(height).showAirTemperature(showTemperature).showPressure(showPressure).timezone(timezone)
                 .showCloudSymbol(showCloudSymbol).showWeatherSymbol(showWeatherSymbol).showWindSymbol(showWindSymbol)
-                .showPrecipitation(showPercipitation).showWindDirection(showWindDirection).showWindSpeed(showWindSpeed)
+                .showPrecipitation(showPercipitation).showAccumulatedPrecipitation(showAccumulatedPrecipitation)
+                .showWindDirection(showWindDirection).showWindSpeed(showWindSpeed)
                 .windSpeedUnit(windSpeedUnit).showDewpointTemperature(showDewpointTemperature).language(language).build();
         AbstractChart meteogram;
         if ("short".equalsIgnoreCase(term)) {

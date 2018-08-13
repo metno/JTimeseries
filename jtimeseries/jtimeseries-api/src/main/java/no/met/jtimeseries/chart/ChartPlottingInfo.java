@@ -41,6 +41,7 @@ public class ChartPlottingInfo {
     private final boolean showCloudSymbol;
     private final boolean showWeatherSymbol;
     private final boolean showPrecipitation;
+    private final boolean showAccumulatedPrecipitation;
     private final String language;
     private String windSpeedUnit = "ms";
     private String timezone = "UTC";
@@ -63,6 +64,7 @@ public class ChartPlottingInfo {
         this.showWindDirection = builder.showWindDirection;
         this.showWindSpeed = builder.showWindSpeed;
         this.showPrecipitation = builder.showPrecipitation;
+        this.showAccumulatedPrecipitation = builder.showAccumulatedPrecipitation;
         this.showCloudSymbol = builder.showCloudSymbol;
         this.showWindSymbol = builder.showWindSymbol;
         this.showWeatherSymbol = builder.showWeatherSymbol;        
@@ -159,6 +161,10 @@ public class ChartPlottingInfo {
         return showPrecipitation;
     }
 
+    public boolean isShowAccumulatedPrecipitation() {
+        return showAccumulatedPrecipitation;
+    }
+
 
     public static class Builder {
         private int width;
@@ -180,6 +186,7 @@ public class ChartPlottingInfo {
         private boolean showCloudSymbol;
         private boolean showWeatherSymbol;
         private boolean showPrecipitation;
+        private boolean showAccumulatedPrecipitation;
         private String timezone;
         private String language;
         private String windSpeedUnit;
@@ -282,6 +289,11 @@ public class ChartPlottingInfo {
             return this;
         }
 
+        public Builder showAccumulatedPrecipitation(boolean accumulatedPrecipitation){
+            this.showAccumulatedPrecipitation = accumulatedPrecipitation;
+            return this;
+        }
+
         public Builder windSpeedUnit(String windSpeedUnit) {
             this.windSpeedUnit=windSpeedUnit;
             return this;
@@ -316,6 +328,7 @@ public class ChartPlottingInfo {
                 + showPressure + ", showWaveDirection=" + showWaveDirection + ", showWaveHeight=" + showWaveHeight
                 + ", showWindSymbol=" + showWindSymbol + ", showCloudSymbol=" + showCloudSymbol 
                 + ", showWeatherSymbol=" + showWeatherSymbol + ", showPrecipitation=" + showPrecipitation
+                + ", showAccumulatedPrecipitation=" + showAccumulatedPrecipitation
                 + ", showCurrentDirection=" + showCurrentDirection + ", showCurrentSpeed=" + showCurrentSpeed 
                 + ", showWindDirection=" + showWindDirection + ", showWindSpeed=" + showWindSpeed 
                 + ", showDewpointTemperature=" + showDewpointTemperature 

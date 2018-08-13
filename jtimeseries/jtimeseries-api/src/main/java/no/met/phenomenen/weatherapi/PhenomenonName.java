@@ -23,7 +23,7 @@ package no.met.phenomenen.weatherapi;
 
 public enum PhenomenonName {
 
-    AirTemperature, seaTemperature, dewPointTemperature, Pressure, Precipitation, PrecipitationMax, PrecipitationMin, WaveDirection, WaveHeight, WindDirectionName, WindDirectionDegree, WindSpeedMPS, WindSpeedBeaufort, WindSpeedName,
+    AirTemperature, seaTemperature, dewPointTemperature, Pressure, Precipitation, PrecipitationMax, PrecipitationMin, AccumulativePrecipitation, WaveDirection, WaveHeight, WindDirectionName, WindDirectionDegree, WindSpeedMPS, WindSpeedBeaufort, WindSpeedName,
     WeatherSymbols, Fog, Cloudiness, LowCloud, MediumCloud, HighCloud, CurrentDirection, CurrentSpeed;
     
     public String nameWithResolution(int timeResolution){

@@ -69,8 +69,12 @@ import org.jfree.chart.renderer.xy.XYArrowRenderer;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.data.Range;
+import org.jfree.data.time.TimeSeries;
+import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.WindDataset;
 import org.jfree.data.xy.XYDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.Layer;
 import org.jfree.ui.RectangleAnchor;
 import org.jfree.ui.TextAnchor;
@@ -520,7 +524,6 @@ public class ChartPlotter {
             renderer.setBarPainter(new StandardXYBarPainter());
             renderer.setSeriesVisibleInLegend(0, false);
             renderer.setDrawBarOutline(true);
-
             plot.mapDatasetToRangeAxis(plotIndex, rangeAxisIndex);
             plot.setDataset(plotIndex, dataset);
             plot.setRenderer(plotIndex, renderer);
@@ -541,6 +544,12 @@ public class ChartPlotter {
             plotIndex++;
             rangeAxisIndex++;
         }
+    }
+
+    public void addAccumulationBarChart (XYDataset dataset, String title, Color color, double margin){
+
+
+
     }
 
     /**
@@ -598,6 +607,7 @@ public class ChartPlotter {
 
     public void addPercipitationBars(TimeBase timeBase, String title, NumberPhenomenon phenomenon, Color color, double maxRange) {
         XYDataset dataSet = phenomenon.getTimeSeries(title, timeBase);
+
         if (dataSet.getSeriesCount() > 0) {
 
             double margin = 0.1;
@@ -613,6 +623,18 @@ public class ChartPlotter {
             plot.addRangeMarker(getRangeAxisIndex() - 1, marker,
                     Layer.BACKGROUND);
         }
+    }
+
+    public void addAccumulatedPrecipitationBars(TimeBase timeBase, String title, NumberPhenomenon phenomenon, Color color, double maxRange){
+        XYDataset dataSet = phenomenon.getTimeSeries(title, timeBase);
+
+        if (dataSet.getSeriesCount() > 0) {
+            double margin = 0.1;
+            double maxPrecipitation = Math.max(phenomenon.getMaxValue(), maxRange);
+            addBarChart(dataSet, "Accumulated Precipitation", color, margin, maxPrecipitation);
+            showBarValuesOnTop(plotIndex - 1, 6D);
+        }
+
     }
 
     /**

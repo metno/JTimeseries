@@ -41,7 +41,7 @@ public class CreateChart {
         frame.pack();
         frame.setVisible(true);
 	}
-	
+
 	static private JFreeChart getShortTermChart(GenericDataModel model, ChartPlottingInfo cpi) {
 		MeteogramWrapper wrapper = new MeteogramWrapper("en");
 
@@ -68,7 +68,7 @@ public class CreateChart {
 		return wrapper.createLongTermMeteogram(model, timePeriod, cpi);
 	}
 
-	
+
 	public static void main(String[] args) throws Exception {
 
 		URL resource = CreateChart.class.getClassLoader().getResource("locationforecast/forecast.xml");
@@ -77,7 +77,7 @@ public class CreateChart {
 		
 		ChartPlottingInfo cpi = new ChartPlottingInfo.Builder(0, 0).altitude(0).width(800).height(300)
                 .showAirTemperature(true).showDewpointTemperature(true).showPressure(true).timezone("UTC").showCloudSymbol(true)
-                .showWeatherSymbol(true).showWindSymbol(true).showPrecipitation(true).showWindSpeed(true)
+                .showWeatherSymbol(true).showWindSymbol(true).showPrecipitation(true).showAccumulatedPrecipitation(true).showWindSpeed(true)
                 .showWindDirection(true).windSpeedUnit("knop").build();
 
 		JFreeChart chart = getShortTermChart(model, cpi);
