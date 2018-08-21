@@ -691,7 +691,6 @@ public class MeteogramWrapper {
         HashMap<Date, Double> precipitationMap = new HashMap<>();
         for(int i = 0; i < ts.getItemCount(); i++) {
             precipitationMap.put(ts.getDataItem(i).getPeriod().getStart(), (double) ts.getDataItem(i).getValue());
-            System.out.println((double) ts.getDataItem(i).getValue());
         }
 
         while (startTime.before(endTime)){
