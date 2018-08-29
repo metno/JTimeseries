@@ -622,7 +622,7 @@ public class ChartPlotter {
         if (dataSet.getSeriesCount() > 0) {
             double margin = 0.1;
             double maxPrecipitation = Math.max(phenomenon.getMaxValue(), maxRange);
-            addBarChart(dataSet, "Accumulated Precipitation", color, margin, maxPrecipitation);
+            addBarChart(dataSet, "Accumulated Precipitation (mm)", color, margin, maxPrecipitation);
             showBarValuesOnTop(plotIndex - 1, 6D);
         }
 

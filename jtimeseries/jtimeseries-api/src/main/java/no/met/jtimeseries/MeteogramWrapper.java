@@ -561,7 +561,7 @@ public class MeteogramWrapper {
 
     private void plotShortTermAccumulatedPrecipitation(GenericDataModel model, ChartPlotter plotter){
 
-        Color accumulatedPrecipitationColor = new Color(114, 232, 93, 180);
+        Color accumulatedPrecipitationColor = new Color(138, 143, 232, 180);
 
         TimeBase precipitationTimeBase = TimeBase.HOUR;
         NumberPhenomenon pc = model.getNumberPhenomenon(PhenomenonName.AccumulativePrecipitation.nameWithResolution(1));
@@ -758,7 +758,7 @@ public class MeteogramWrapper {
 
     private void plotLongTermAccumulatedPrecipitation(GenericDataModel model, ChartPlotter plotter, int timeResolution){
 
-        Color accumulatedPrecipitationColor = new Color(114, 232, 93, 180);
+        Color accumulatedPrecipitationColor = new Color(138, 143, 232, 180);
         NumberPhenomenon accumulatedPrecipitation = model.getNumberPhenomenon(PhenomenonName.AccumulativePrecipitation.nameWithResolution(timeResolution));
 
         if (!accumulatedPrecipitation.getItems().isEmpty()) {
