@@ -516,7 +516,6 @@ public class ChartPlotter {
             double margin, double maxValue) {
 
         if (dataset.getItemCount(0) > 0) {
-
             XYBarRenderer renderer = new XYBarRenderer(margin);
             renderer.setSeriesPaint(0, color);
             renderer.setShadowVisible(false);
@@ -544,12 +543,6 @@ public class ChartPlotter {
             plotIndex++;
             rangeAxisIndex++;
         }
-    }
-
-    public void addAccumulationBarChart (XYDataset dataset, String title, Color color, double margin){
-
-
-
     }
 
     /**
@@ -583,7 +576,6 @@ public class ChartPlotter {
         XYDataset minDataset = min.getTimeSeries(title, timeBase);
         if (maxDataset.getSeriesCount() > 0 && minDataset.getSeriesCount() > 0
                 && maxDataset.getItemCount(0) > 0 && minDataset.getItemCount(0) > 0) {
-
             double margin = 0.2;
             double maxPrecipitation = Math.max(max.getMaxValue(), maxRange);
 
@@ -609,7 +601,6 @@ public class ChartPlotter {
         XYDataset dataSet = phenomenon.getTimeSeries(title, timeBase);
 
         if (dataSet.getSeriesCount() > 0) {
-
             double margin = 0.1;
             double maxPrecipitation = Math.max(phenomenon.getMaxValue(), maxRange);
             addBarChart(dataSet, "value", color, margin, maxPrecipitation);
