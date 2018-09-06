@@ -64,16 +64,19 @@ public class MarinogramWrapper extends MarinogramPlot {
     private int totalPlotHeight;
     private List<MarinogramPlot> plots;
     private StackedXYPlot combiPlot;
+    private static String language;
 
     public MarinogramWrapper(int width, int height, String timezone, String language) {
         super(width, height, timezone, language);
         totalPlotHeight = 0;
+        MarinogramWrapper.language = language;
         this.plots = new ArrayList<MarinogramPlot>();
     }
 
     public MarinogramWrapper(int width, String language) {
         super(width, language);
         totalPlotHeight = 0;
+        MarinogramWrapper.language = language;
         this.plots = new ArrayList<MarinogramPlot>();
     }
 
@@ -269,7 +272,7 @@ public class MarinogramWrapper extends MarinogramPlot {
     }
 
     public static JFreeChart createEmptyChart(ChartPlottingInfo cpi) {
-        ChartPlotter cp = new ChartPlotter();
+        ChartPlotter cp = new ChartPlotter(language);
         cp.setHeight(cpi.getHeight());
         cp.setWidth(cpi.getWidth());
         cp.setPlotDefaultProperties("", "");
@@ -284,7 +287,7 @@ public class MarinogramWrapper extends MarinogramPlot {
         return createJFreeChart("", cp.getPlot(), cpi.getWidth());
     }
 
-    public static void main(String args[]) throws Exception {
+    public static void main(String args[]) {
         MarinogramTemperaturePlot mp = new MarinogramTemperaturePlot(800, 200, "UTC", "en");
         mp.setDescription("Temperature");
 

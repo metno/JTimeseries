@@ -43,7 +43,7 @@ public class CreateChart {
 	}
 
 	static private JFreeChart getShortTermChart(GenericDataModel model, ChartPlottingInfo cpi) {
-		MeteogramWrapper wrapper = new MeteogramWrapper("en");
+		MeteogramWrapper wrapper = new MeteogramWrapper("no");
 
 		NumberPhenomenon temperature = model.getNumberPhenomenon("AirTemperature"); // need a point-in-time variable here
 		Date from = temperature.getStartTime();
@@ -57,7 +57,7 @@ public class CreateChart {
 	}
 
 	static private JFreeChart getLongTermChart(GenericDataModel model, ChartPlottingInfo cpi) {
-		MeteogramWrapper wrapper = new MeteogramWrapper("en");
+		MeteogramWrapper wrapper = new MeteogramWrapper("no");
 
 		NumberPhenomenon temperature = model.getNumberPhenomenon("AirTemperature"); // need a point-in-time variable here
 		Date from = temperature.getStartTime();
@@ -80,8 +80,8 @@ public class CreateChart {
                 .showWeatherSymbol(true).showWindSymbol(true).showPrecipitation(true).showAccumulatedPrecipitation(true).showWindSpeed(true)
                 .showWindDirection(true).windSpeedUnit("knop").build();
 
-		//JFreeChart chart = getShortTermChart(model, cpi);
-		JFreeChart chart = getLongTermChart(model, cpi);
+		JFreeChart chart = getShortTermChart(model, cpi);
+		//JFreeChart chart = getLongTermChart(model, cpi);
 		show(chart);
 	}
 

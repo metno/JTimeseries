@@ -88,6 +88,7 @@ public class MeteogramWrapper {
     public static final int SHORT_TERM_HOURS = 48;
     public static final int LONG_TERM_HOURS = 228;
     public static final int BACKGROUND_LINES = 10;
+    private static String language;
 
     private ResourceBundle messages;
 
@@ -96,6 +97,7 @@ public class MeteogramWrapper {
     public MeteogramWrapper(String language) {
 
         locale = new Locale(language);
+        this.language = language;
         messages = ResourceBundle.getBundle("messages", locale);
 
     }
@@ -194,7 +196,7 @@ public class MeteogramWrapper {
 
         JFreeChart jchart = null;
 
-        ChartPlotter plotter = new ChartPlotter();
+        ChartPlotter plotter = new ChartPlotter(language);
         // default setting
         plotter.setHeight(cpi.getHeight());
         plotter.setWidth(cpi.getWidth());
@@ -321,7 +323,7 @@ public class MeteogramWrapper {
 
     public JFreeChart createLongTermMeteogram(GenericDataModel model, TimePeriod timePeriod, ChartPlottingInfo cpi) {
 
-        ChartPlotter plotter = new ChartPlotter();
+        ChartPlotter plotter = new ChartPlotter(language);
         // default setting
         plotter.setHeight(cpi.getHeight());
         plotter.setWidth(cpi.getWidth());
@@ -572,7 +574,7 @@ public class MeteogramWrapper {
         if (!pc.getItems().isEmpty()) {
             pc.filter(new LessOrEqualNumberFilter(0.0)); // avoid plotting empty bars with 0 numbers
             if (!pc.getItems().isEmpty()) { // filter did not remove all values
-                plotter.addAccumulatedPrecipitationBars(precipitationTimeBase, "accumulated precipitation", pc, accumulatedPrecipitationColor, pc.getMaxValue());
+                plotter.addAccumulatedPrecipitationBars(precipitationTimeBase, "accumulated precipitation", pc, accumulatedPrecipitationColor);
             }
         }
     }
@@ -762,7 +764,7 @@ public class MeteogramWrapper {
         NumberPhenomenon accumulatedPrecipitation = model.getNumberPhenomenon(PhenomenonName.AccumulativePrecipitation.nameWithResolution(timeResolution));
 
         if (!accumulatedPrecipitation.getItems().isEmpty()) {
-            plotter.addAccumulatedPrecipitationBars(TimeBase.HOUR_6, "accumulated precipitation", accumulatedPrecipitation, accumulatedPrecipitationColor, accumulatedPrecipitation.getMaxValue());
+            plotter.addAccumulatedPrecipitationBars(TimeBase.HOUR_6, "accumulated precipitation", accumulatedPrecipitation, accumulatedPrecipitationColor);
         }
 
     }

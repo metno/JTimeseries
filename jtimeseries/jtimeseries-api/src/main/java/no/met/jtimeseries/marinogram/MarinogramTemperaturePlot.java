@@ -109,7 +109,7 @@ public class MarinogramTemperaturePlot extends MarinogramPlot {
         NumberPhenomenon wTemperature = null;
         NumberPhenomenon dTemperature = null;
         // default setting
-        ChartPlotter plotter = new ChartPlotter();
+        ChartPlotter plotter = new ChartPlotter(language);
         plotter.setHeight(this.getHeight());
         plotter.setWidth(this.getWidth());
         plotter.setPlotDefaultProperties("", "");

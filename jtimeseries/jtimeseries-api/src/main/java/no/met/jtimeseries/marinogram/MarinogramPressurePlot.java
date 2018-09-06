@@ -73,7 +73,7 @@ public class MarinogramPressurePlot extends MarinogramPlot {
     private XYPlot createPlot(TimeZone timezone, boolean plotPressure) {
         ChartPlotter plotter = null;
         if (plotPressure) {
-            plotter = new ChartPlotter();
+            plotter = new ChartPlotter(language);
             // default setting
             plotter.setHeight(this.getHeight());
             plotter.setWidth(this.getWidth());

@@ -30,14 +30,7 @@ import java.awt.Paint;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.logging.Logger;
 import no.met.halo.common.LogUtils;
 
@@ -96,6 +89,9 @@ public class ChartPlotter {
     private static final int weatherSymbolPlotWeight = 1;
     private static final int cloudPlotWeight = 1;
 
+    protected ResourceBundle messages;
+    private Locale locale;
+
     private boolean addedDomainMarkers = false;
     // The width of the chart
     private int width;
@@ -114,10 +110,13 @@ public class ChartPlotter {
     // Plot object for cloud symbols (when plotted on top of diagram)
     private XYPlot cloudPlot = null;
 
-    public ChartPlotter() {
+    public ChartPlotter(String language) {
         plotIndex = 0;
         rangeAxisIndex = 0;
         plot = new XYPlot();
+
+        locale = new Locale(language);
+        messages = ResourceBundle.getBundle("messages", locale);
     }
 
     public boolean isAddedDomainMarkers() {
@@ -616,13 +615,11 @@ public class ChartPlotter {
         }
     }
 
-    public void addAccumulatedPrecipitationBars(TimeBase timeBase, String title, NumberPhenomenon phenomenon, Color color, double maxRange){
+    public void addAccumulatedPrecipitationBars(TimeBase timeBase, String title, NumberPhenomenon phenomenon, Color color){
         XYDataset dataSet = phenomenon.getTimeSeries(title, timeBase);
-
         if (dataSet.getSeriesCount() > 0) {
             double margin = 0.1;
-            double maxPrecipitation = Math.max(phenomenon.getMaxValue(), maxRange);
-            addBarChart(dataSet, "Accumulated Precipitation (mm)", color, margin, maxPrecipitation);
+            addBarChart(dataSet, messages.getString("label.accumulatedPrecipitation"), color, margin, phenomenon.getMaxValue());
             showBarValuesOnTop(plotIndex - 1, 6D);
         }
 

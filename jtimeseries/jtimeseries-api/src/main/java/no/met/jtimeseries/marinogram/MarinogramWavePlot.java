@@ -84,7 +84,7 @@ public class MarinogramWavePlot extends MarinogramPlot {
 
 	private XYPlot createPlot(TimeZone timezone, boolean plotWaveDirection,
 			boolean plotWaveHeight) {
-		ChartPlotter plotter = new ChartPlotter();
+		ChartPlotter plotter = new ChartPlotter(language);
 		// default setting
 		plotter.setHeight(this.getHeight());
 		plotter.setWidth(this.getWidth());
