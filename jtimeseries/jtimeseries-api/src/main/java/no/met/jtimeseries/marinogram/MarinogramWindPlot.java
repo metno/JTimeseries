@@ -88,7 +88,7 @@ public class MarinogramWindPlot extends MarinogramPlot {
     }
 
     private XYPlot createPlot(TimeZone timezone, boolean plotWindDirection, boolean plotWindSpeed) {
-        ChartPlotter plotter = new ChartPlotter();
+        ChartPlotter plotter = new ChartPlotter(language);
         // default setting
         plotter.setHeight(this.getHeight());
         plotter.setWidth(this.getWidth());
