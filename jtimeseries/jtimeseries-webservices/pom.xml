@@ -14,7 +14,7 @@
     <version>${majorMinorVersion}.${incrementalVersion}</version>
     <properties>
         <majorMinorVersion>2.28</majorMinorVersion>
-        <incrementalVersion>0</incrementalVersion>
+        <incrementalVersion>1</incrementalVersion>
         <docker.registry>halo-registry.met.no:5000/</docker.registry>
         <docker.push.image>false</docker.push.image>
         <docker.host>http://localhost:2375</docker.host>

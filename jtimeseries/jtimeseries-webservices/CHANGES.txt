@@ -1,3 +1,5 @@
+release date=14:55 10.12.2018,version=2.28.1,urgency=low,by=Henrik Janson <henrikj@met.no>,distribution=all
+ * Fixed issue where accumulated precipitation would crash meteogram.
 release date=16:40 12.09.2018,version=2.28.0,urgency=low,by=Bjorn Larsen <bjornkl@met.no>,distribution=all
  * Added accumulated precipitation
 release date=14:30 28.02.2018,version=2.27.0,urgency=low,by=Bjorn Larsen <bjornkl@met.no>,distribution=all
