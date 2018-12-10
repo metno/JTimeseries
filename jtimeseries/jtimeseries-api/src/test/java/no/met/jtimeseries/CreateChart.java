@@ -80,8 +80,8 @@ public class CreateChart {
                 .showWeatherSymbol(true).showWindSymbol(true).showPrecipitation(true).showAccumulatedPrecipitation(true).showWindSpeed(true)
                 .showWindDirection(true).windSpeedUnit("knop").build();
 
-		JFreeChart chart = getShortTermChart(model, cpi);
-		//JFreeChart chart = getLongTermChart(model, cpi);
+		//JFreeChart chart = getShortTermChart(model, cpi);
+		JFreeChart chart = getLongTermChart(model, cpi);
 		show(chart);
 	}
 
