@@ -677,6 +677,7 @@ public class MeteogramWrapper {
                 }else{
                     plotter.addMaxMinPercipitationBars(TimeBase.HOUR_6, "precipitation", pcMax, pcMin,
                             maxPercipitationColor, minPercipitationColor, maxOf(pcMax, pc6));
+
                 }
             }
 
@@ -687,7 +688,7 @@ public class MeteogramWrapper {
                 if(maxValue != 0){
                     plotter.addPercipitationBars(TimeBase.HOUR_6, "precipitation", pc6, maxPercipitationColor, maxValue);
                 }else{
-                    plotter.addPercipitationBars(TimeBase.HOUR_6, "precipitation", pc6, maxPercipitationColor, pc6.getMaxValue());
+                    plotter.addPercipitationBars(TimeBase.HOUR_6, "precipitation", pc6, maxPercipitationColor, Math.max(pc6.getMaxValue(), pcMax.getMaxValue()));
                 }
             }
         } else {
