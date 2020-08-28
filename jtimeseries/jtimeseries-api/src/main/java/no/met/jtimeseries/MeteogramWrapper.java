@@ -1,66 +1,45 @@
-/** *****************************************************************************
- *   Copyright (C) 2016 MET Norway
- *   Contact information:
- *   Norwegian Meteorological Institute
- *   Henrik Mohns Plass 1
- *   0313 OSLO
- *   NORWAY
- *
- *   This file is part of jTimeseries
- *   jTimeseries is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
- *   jTimeseries is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *   GNU General Public License for more details.
- *   You should have received a copy of the GNU General Public License
- *   along with jTimeseries; if not, write to the Free Software
- *   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- ****************************************************************************** */
+/**
+ * ****************************************************************************
+ * Copyright (C) 2016 MET Norway
+ * Contact information:
+ * Norwegian Meteorological Institute
+ * Henrik Mohns Plass 1
+ * 0313 OSLO
+ * NORWAY
+ * <p>
+ * This file is part of jTimeseries
+ * jTimeseries is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * jTimeseries is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with jTimeseries; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * *****************************************************************************
+ */
 package no.met.jtimeseries;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.io.IOException;
-import java.io.Reader;
-import java.sql.Time;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.logging.Logger;
-
-import no.met.jtimeseries.chart.ChartPlotter;
-import no.met.jtimeseries.chart.ChartPlottingInfo;
-import no.met.jtimeseries.chart.PlotStyle;
-import no.met.jtimeseries.chart.SplineStyle;
-import no.met.jtimeseries.chart.TimeBase;
-import no.met.jtimeseries.chart.TimePeriod;
-import no.met.jtimeseries.chart.Utility;
-import no.met.jtimeseries.data.item.AbstractValueItem;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import no.met.halo.common.LogUtils;
+import no.met.jtimeseries.chart.*;
 import no.met.jtimeseries.data.item.NumberValueItem;
 import no.met.jtimeseries.data.model.GenericDataModel;
 import no.met.jtimeseries.marinogram.MarinogramPlot;
 import no.met.jtimeseries.marinogram.MarinogramWrapper;
 import no.met.jtimeseries.parser.ForecastParser;
 import no.met.jtimeseries.parser.LocationForecastAddressFactory;
+import no.met.jtimeseries.parser.LocationForecastJsonParseScheme;
 import no.met.jtimeseries.parser.LocationForecastParseScheme;
 import no.met.phenomenen.AbstractPhenomenon;
 import no.met.phenomenen.NumberPhenomenon;
 import no.met.phenomenen.SymbolPhenomenon;
-import no.met.phenomenen.filter.AfterDateFilter;
-import no.met.phenomenen.filter.BeforeDateFilter;
-import no.met.phenomenen.filter.EveryNthItemFilter;
-import no.met.phenomenen.filter.InListFromDateFilter;
-import no.met.phenomenen.filter.IndexLessFilter;
-import no.met.phenomenen.filter.LessOrEqualNumberFilter;
-import no.met.phenomenen.filter.OverlappingTimeFilter;
+import no.met.phenomenen.filter.*;
 import no.met.phenomenen.weatherapi.PhenomenonName;
-import no.met.halo.common.LogUtils;
-
 import org.apache.commons.lang.time.DateUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -68,13 +47,21 @@ import org.dom4j.io.SAXReader;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.NumberTickUnit;
-import org.jfree.data.time.RegularTimePeriod;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
-import org.jfree.data.time.TimeSeriesDataItem;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.ui.Layer;
 import org.jfree.ui.TextAnchor;
+
+import java.awt.*;
+import java.io.IOException;
+import java.io.Reader;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.List;
+import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * A wrapper class for creating meteogram
@@ -105,7 +92,7 @@ public class MeteogramWrapper {
     public static GenericDataModel getModel(String resource, TimePeriod timePeriod) throws ParseException, IOException {
 
         GenericDataModel model = new GenericDataModel();
-        LocationForecastParseScheme locationForecastParser = new LocationForecastParseScheme(timePeriod);
+        LocationForecastJsonParseScheme locationForecastParser = new LocationForecastJsonParseScheme(timePeriod);
         locationForecastParser.setModel(model);
 
         ForecastParser forecastParser = new ForecastParser(locationForecastParser, resource);
@@ -150,7 +137,7 @@ public class MeteogramWrapper {
     /**
      * Get the nearest full hour where UTC hour % snapTo == 0
      *
-     * @param date Date to adapt
+     * @param date   Date to adapt
      * @param snapTo Hour to snap to
      * @return
      */
@@ -203,7 +190,8 @@ public class MeteogramWrapper {
         plotter.setPlotDefaultProperties("", "");
         Date origEndTime = model.getTimeTo();
         // build accumulated precipitation model
-        if(cpi.isShowAccumulatedPrecipitation()){
+
+        if (cpi.isShowAccumulatedPrecipitation()) {
             filterShortTermPercipiation(model);
             generateShortTermAccumulatedPrecipitationModel(model, origEndTime);
         }
@@ -211,6 +199,7 @@ public class MeteogramWrapper {
         if (cpi.isShowAirTemperature()) {
             plotTemperature(model, plotter);
         }
+
         if (cpi.isShowDewpointTemperature()) {
             plotDewPointTemperature(model, plotter);
         }
@@ -227,7 +216,7 @@ public class MeteogramWrapper {
         SymbolPhenomenon weatherSymbols = model.getSymbolPhenomenon(PhenomenonName.WeatherSymbols
                 .nameWithResolution(1));
         if (weatherSymbols == null) {
-            weatherSymbols = model.getSymbolPhenomenon(PhenomenonName.WeatherSymbols.nameWithResolution(3));
+            weatherSymbols = model.getSymbolPhenomenon(PhenomenonName.WeatherSymbols.nameWithResolution(1));
             weatherSymbols.filter(new IndexLessFilter(1));
         } else {
 
@@ -238,9 +227,10 @@ public class MeteogramWrapper {
             weatherSymbols.filter(new EveryNthItemFilter(2));
         }
         // we need at least three hours at the end to display a weather
+
         // symbol correctly so remove any item
         // that is closed than three hours to the end of the meteogram.
-        Date symbolEndTime = Utility.getDateWithAddedHours(origEndTime, -3);
+        Date symbolEndTime = Utility.getDateWithAddedHours(origEndTime, -1);
         weatherSymbols.filter(new AfterDateFilter(symbolEndTime));
 
         List<Date> symbolTimes = weatherSymbols.getTimes();
@@ -266,19 +256,20 @@ public class MeteogramWrapper {
 
         if (cpi.isShowPrecipitation()) {
             double maxValue = 0;
-            if(cpi.isShowAccumulatedPrecipitation()){
+            if (cpi.isShowAccumulatedPrecipitation()) {
                 int timeResolution = 1;
                 NumberPhenomenon pcModel = model.getNumberPhenomenon(PhenomenonName.Precipitation.nameWithResolution(1));
-                if (pcModel == null){
+                if (pcModel == null) {
                     timeResolution = 3;
                 }
                 maxValue = getAccumulatedPrecipitaionMaxValue(model, timeResolution);
-            }else{
+            } else {
                 filterShortTermPercipiation(model); //filter has already been applied when creating the accumulated precipitation model.
             }
 
             plotShortTermPercipitation(model, plotter, maxValue);
         }
+
 
         if (cpi.isShowAccumulatedPrecipitation()) {
             plotShortTermAccumulatedPrecipitation(model, plotter);
@@ -333,7 +324,7 @@ public class MeteogramWrapper {
         Date startTime = calculateStartTimeForLongTerm(temperature);
         Date origEndTime = model.getTimeTo();
 
-        if(cpi.isShowAccumulatedPrecipitation()){
+        if (cpi.isShowAccumulatedPrecipitation()) {
             filterLongTermPercipiation(model, startTime);
             generateLongTermAccumulatedPrecipitationModel(model, startTime, origEndTime, 6);
         }
@@ -363,6 +354,7 @@ public class MeteogramWrapper {
         // we start by filtering the weather symbols since they are used to
         // determine where the cloud and
         // wind symbols are plotted as well.
+
         List<Date> symbolTimes;
         SymbolPhenomenon weatherSymbols = model.getSymbolPhenomenon(PhenomenonName.WeatherSymbols
                 .nameWithResolution(6));
@@ -399,15 +391,16 @@ public class MeteogramWrapper {
             // If we have a model containing both precipitation and accumulative precipitation
             // we want the precipitation model to be based on the accumulative max value
             double maxValue = 0;
-            if(cpi.isShowAccumulatedPrecipitation()) {
+            if (cpi.isShowAccumulatedPrecipitation()) {
                 maxValue = getAccumulatedPrecipitaionMaxValue(model, 6);
-            }else{
+            } else {
                 filterLongTermPercipiation(model, startTime);  // filter has already been applied when creating the accumulated precipitation model.
             }
             plotLongTermPrecipitation(model, plotter, maxValue);
 
         }
-        if (cpi.isShowAccumulatedPrecipitation()){
+
+        if (cpi.isShowAccumulatedPrecipitation()) {
             plotLongTermAccumulatedPrecipitation(model, plotter, 6);
         }
 
@@ -424,7 +417,7 @@ public class MeteogramWrapper {
 
     }
 
-    private Double getAccumulatedPrecipitaionMaxValue(GenericDataModel model, int timeResolution){
+    private Double getAccumulatedPrecipitaionMaxValue(GenericDataModel model, int timeResolution) {
         NumberPhenomenon pc = model.getNumberPhenomenon(PhenomenonName.AccumulativePrecipitation.nameWithResolution(timeResolution));
         return pc != null ? pc.getMaxValue() : 0;
 
@@ -471,6 +464,9 @@ public class MeteogramWrapper {
 
         NumberPhenomenon temperature = model.getNumberPhenomenon(PhenomenonName.AirTemperature.toString());
         List<Date> shortTermTime = temperature.getTime();
+        /*for (Date date : shortTermTime) {
+            System.out.println(date);
+        }*/
 
         // set domain range after (must) plot all the data
         plotter.addDomainGridLines(interval);
@@ -497,7 +493,7 @@ public class MeteogramWrapper {
             // not in max
             pcMin.filter(new InListFromDateFilter(pcMax.getTimes()));
         } else {
-            NumberPhenomenon pc = model.getNumberPhenomenon(PhenomenonName.Precipitation.nameWithResolution(3));
+            NumberPhenomenon pc = model.getNumberPhenomenon(PhenomenonName.Precipitation.nameWithResolution(1));
             pc.filter(new LessOrEqualNumberFilter(0.0));
         }
 
@@ -505,15 +501,16 @@ public class MeteogramWrapper {
 
     /**
      * Creates a short term accumulated precipitation model based on precipitation data time series.
+     *
      * @param model
      * @param endTime
      */
-    private void generateShortTermAccumulatedPrecipitationModel(GenericDataModel model, Date endTime){
+    private void generateShortTermAccumulatedPrecipitationModel(GenericDataModel model, Date endTime) {
         int timeResolution = 1;
         NumberPhenomenon pcModel;
         if (hasMinMaxPrecipitation(model, 1)) {
             pcModel = model.getNumberPhenomenon(PhenomenonName.PrecipitationMax.nameWithResolution(1));
-        }else{
+        } else {
             pcModel = model.getNumberPhenomenon(PhenomenonName.Precipitation.nameWithResolution(1));
             if (pcModel == null) {// does not have 1 hour precipitation, using 3 hours (locationforecast <= 1.9)
                 pcModel = model.getNumberPhenomenon(PhenomenonName.Precipitation.nameWithResolution(3));
@@ -524,25 +521,25 @@ public class MeteogramWrapper {
         generateAccumulatedPrecipitation(model, precipitationDataset, timeResolution, endTime, false);
     }
 
-    private void generateLongTermAccumulatedPrecipitationModel(GenericDataModel model, Date startTime, Date endTime, int timeResolution){
+    private void generateLongTermAccumulatedPrecipitationModel(GenericDataModel model, Date startTime, Date endTime, int timeResolution) {
         filterLongTermPercipiation(model, startTime);
         NumberPhenomenon pcMaxModel = model.getNumberPhenomenon(PhenomenonName.PrecipitationMax.nameWithResolution(timeResolution));
         NumberPhenomenon pcMinModel = model.getNumberPhenomenon(PhenomenonName.PrecipitationMin.nameWithResolution(timeResolution));
         NumberPhenomenon pcModel;
 
-        if(pcMaxModel != null || pcMinModel != null){
+        if (pcMaxModel != null || pcMinModel != null) {
             XYDataset maxDataset = pcMaxModel.getTimeSeries("precipitation", intToTimeBase(timeResolution));
             XYDataset minDataset = pcMaxModel.getTimeSeries("precipitation", intToTimeBase(timeResolution));
             if (maxDataset.getSeriesCount() > 0 && minDataset.getSeriesCount() > 0
                     && maxDataset.getItemCount(0) > 0 && minDataset.getItemCount(0) > 0) {
                 generateAccumulatedPrecipitation(model, maxDataset, timeResolution, endTime, true);
-            }else{
+            } else {
                 pcModel = model.getNumberPhenomenon(PhenomenonName.Precipitation.nameWithResolution(timeResolution));
                 XYDataset precipitationDataset = pcModel.getTimeSeries("precipitation", intToTimeBase(timeResolution));
                 generateAccumulatedPrecipitation(model, precipitationDataset, timeResolution, endTime, false);
 
             }
-        }else{
+        } else {
             pcModel = model.getNumberPhenomenon(PhenomenonName.Precipitation.nameWithResolution(timeResolution));
             XYDataset precipitationDataset = pcModel.getTimeSeries("precipitation", intToTimeBase(timeResolution));
             generateAccumulatedPrecipitation(model, precipitationDataset, timeResolution, endTime, false);
@@ -551,17 +548,17 @@ public class MeteogramWrapper {
 
     }
 
-    private TimeBase intToTimeBase(int timeResolution){
-        if(timeResolution == 1){
+    private TimeBase intToTimeBase(int timeResolution) {
+        if (timeResolution == 1) {
             return TimeBase.HOUR;
-        }else if(timeResolution == 3){
+        } else if (timeResolution == 3) {
             return TimeBase.HOUR_3;
-        }else{
+        } else {
             return TimeBase.HOUR_6;
         }
     }
 
-    private void plotShortTermAccumulatedPrecipitation(GenericDataModel model, ChartPlotter plotter){
+    private void plotShortTermAccumulatedPrecipitation(GenericDataModel model, ChartPlotter plotter) {
 
         Color accumulatedPrecipitationColor = new Color(138, 143, 232, 180);
 
@@ -572,7 +569,7 @@ public class MeteogramWrapper {
             pc = model.getNumberPhenomenon(PhenomenonName.AccumulativePrecipitation.nameWithResolution(3));
         }
         if (pc != null) {
-            if(!pc.getItems().isEmpty()) {
+            if (!pc.getItems().isEmpty()) {
                 pc.filter(new LessOrEqualNumberFilter(0.0)); // avoid plotting empty bars with 0 numbers
                 if (!pc.getItems().isEmpty()) { // filter did not remove all values
                     plotter.addAccumulatedPrecipitationBars(precipitationTimeBase, "accumulated precipitation", pc, accumulatedPrecipitationColor);
@@ -590,10 +587,10 @@ public class MeteogramWrapper {
             NumberPhenomenon pcMin = model.getNumberPhenomenon(PhenomenonName.PrecipitationMin.nameWithResolution(1));
             NumberPhenomenon pcMax = model.getNumberPhenomenon(PhenomenonName.PrecipitationMax.nameWithResolution(1));
             if (!pcMin.getItems().isEmpty() || !pcMax.getItems().isEmpty()) {
-                if(accumulatedMaxValue != 0){
+                if (accumulatedMaxValue != 0) {
                     plotter.addMaxMinPercipitationBars(TimeBase.HOUR, "precipitation", pcMax, pcMin, maxPercipitationColor,
                             minPercipitationColor, accumulatedMaxValue);
-                }else{
+                } else {
                     plotter.addMaxMinPercipitationBars(TimeBase.HOUR, "precipitation", pcMax, pcMin, maxPercipitationColor,
                             minPercipitationColor, pcMax.getMaxValue());
                 }
@@ -603,16 +600,16 @@ public class MeteogramWrapper {
             TimeBase precipitationTimeBase = TimeBase.HOUR;
             NumberPhenomenon pc = model.getNumberPhenomenon(PhenomenonName.Precipitation.nameWithResolution(1));
             if (pc == null) {// does not have 1 hour precipitation, using 3 hours (locationforecast <= 1.9)
-                precipitationTimeBase = TimeBase.HOUR_3;
-                pc = model.getNumberPhenomenon(PhenomenonName.Precipitation.nameWithResolution(3));
+                precipitationTimeBase = TimeBase.HOUR_6;
+                pc = model.getNumberPhenomenon(PhenomenonName.Precipitation.nameWithResolution(6));
             }
             if (!pc.getItems().isEmpty()) {
                 pc.filter(new LessOrEqualNumberFilter(0.0)); // avoid plotting empty bars with 0 numbers
                 if (!pc.getItems().isEmpty()) { // filter did not remove all values
-                    if(accumulatedMaxValue != 0){
+                    if (accumulatedMaxValue != 0) {
                         plotter.addPercipitationBars(precipitationTimeBase, "precipitation", pc, maxPercipitationColor, accumulatedMaxValue);
 
-                    }else{
+                    } else {
                         plotter.addPercipitationBars(precipitationTimeBase, "precipitation", pc, maxPercipitationColor, pc.getMaxValue());
                     }
                 }
@@ -671,10 +668,10 @@ public class MeteogramWrapper {
             NumberPhenomenon pc6 = model.getNumberPhenomenon(PhenomenonName.Precipitation.nameWithResolution(6));
 
             if (!pcMin.getItems().isEmpty() || !pcMax.getItems().isEmpty()) {
-                if(maxValue != 0) {
+                if (maxValue != 0) {
                     plotter.addMaxMinPercipitationBars(TimeBase.HOUR_6, "precipitation", pcMax, pcMin,
                             maxPercipitationColor, minPercipitationColor, maxValue);
-                }else{
+                } else {
                     plotter.addMaxMinPercipitationBars(TimeBase.HOUR_6, "precipitation", pcMax, pcMin,
                             maxPercipitationColor, minPercipitationColor, maxOf(pcMax, pc6));
 
@@ -685,9 +682,9 @@ public class MeteogramWrapper {
             // range so need to supplement with
             // normal precipitation values.
             if (!pc6.getItems().isEmpty()) {
-                if(maxValue != 0){
+                if (maxValue != 0) {
                     plotter.addPercipitationBars(TimeBase.HOUR_6, "precipitation", pc6, maxPercipitationColor, maxValue);
-                }else{
+                } else {
                     plotter.addPercipitationBars(TimeBase.HOUR_6, "precipitation", pc6, maxPercipitationColor, Math.max(pc6.getMaxValue(), pcMax.getMaxValue()));
                 }
             }
@@ -695,9 +692,9 @@ public class MeteogramWrapper {
 
             NumberPhenomenon pc6 = model.getNumberPhenomenon(PhenomenonName.Precipitation.nameWithResolution(6));
             if (!pc6.getItems().isEmpty()) {
-                if(maxValue != 0){
+                if (maxValue != 0) {
                     plotter.addPercipitationBars(TimeBase.HOUR_6, "precipitation", pc6, maxPercipitationColor, maxValue);
-                }else{
+                } else {
                     plotter.addPercipitationBars(TimeBase.HOUR_6, "precipitation", pc6, maxPercipitationColor, pc6.getMaxValue());
                 }
             }
@@ -707,35 +704,35 @@ public class MeteogramWrapper {
 
     /**
      * Generates the accumulated precipitation model based on a given precipitation model and time resolution.
+     *
      * @param model
      * @param precipitation
      * @param timeResolution
      * @param endTime
      */
-    private void generateAccumulatedPrecipitation(GenericDataModel model, XYDataset precipitation, int timeResolution, Date endTime, boolean ExternalPrecipitationModel){
-
+    private void generateAccumulatedPrecipitation(GenericDataModel model, XYDataset precipitation, int timeResolution, Date endTime, boolean ExternalPrecipitationModel) {
 
 
         NumberPhenomenon accumulatedPrecipitation = new NumberPhenomenon();
         TimeSeries ts = ((TimeSeriesCollection) precipitation).getSeries(0);
-        if(ts.getItemCount() > 0){
+        if (ts.getItemCount() > 0) {
             Date startTime = ts.getDataItem(0).getPeriod().getStart();
             Date prevTime = startTime;
             HashMap<Date, Double> precipitationMap = new HashMap<>();
 
             Date localEndTime = startTime;
 
-            for(int i = 0; i < ts.getItemCount(); i++) {
+            for (int i = 0; i < ts.getItemCount(); i++) {
                 precipitationMap.put(ts.getDataItem(i).getPeriod().getStart(), (double) ts.getDataItem(i).getValue());
                 localEndTime = localEndTime.before(ts.getDataItem(i).getPeriod().getEnd()) ? ts.getDataItem(i).getPeriod().getEnd() : localEndTime;
             }
 
-            if(ExternalPrecipitationModel){ //  For longterm precipitaion one model might not be enough to fill the table.
+            if (ExternalPrecipitationModel) { //  For longterm precipitaion one model might not be enough to fill the table.
                 NumberPhenomenon pcModel = model.getNumberPhenomenon(PhenomenonName.Precipitation.nameWithResolution(timeResolution));
                 XYDataset precipitationDataset = pcModel.getTimeSeries("Precipitation", intToTimeBase(timeResolution));
                 TimeSeries addedSeries = ((TimeSeriesCollection) precipitationDataset).getSeries(0);
-                for(int i = 0; i < addedSeries.getItemCount(); i++){
-                    if(localEndTime.before(addedSeries.getDataItem(i).getPeriod().getStart())){
+                for (int i = 0; i < addedSeries.getItemCount(); i++) {
+                    if (localEndTime.before(addedSeries.getDataItem(i).getPeriod().getStart())) {
                         precipitationMap.put(addedSeries.getDataItem(i).getPeriod().getStart(), (double) addedSeries.getDataItem(i).getValue());
                     }
                 }
@@ -763,12 +760,12 @@ public class MeteogramWrapper {
         }
     }
 
-    private void plotLongTermAccumulatedPrecipitation(GenericDataModel model, ChartPlotter plotter, int timeResolution){
+    private void plotLongTermAccumulatedPrecipitation(GenericDataModel model, ChartPlotter plotter, int timeResolution) {
 
         Color accumulatedPrecipitationColor = new Color(138, 143, 232, 180);
         NumberPhenomenon accumulatedPrecipitation = model.getNumberPhenomenon(PhenomenonName.AccumulativePrecipitation.nameWithResolution(timeResolution));
 
-        if(accumulatedPrecipitation != null) {
+        if (accumulatedPrecipitation != null) {
             if (!accumulatedPrecipitation.getItems().isEmpty()) {
                 plotter.addAccumulatedPrecipitationBars(TimeBase.HOUR_6, "accumulated precipitation", accumulatedPrecipitation, accumulatedPrecipitationColor);
             }
@@ -947,7 +944,7 @@ public class MeteogramWrapper {
     /**
      * Adding Wind-symbols to the plot
      *
-     * @param model datamodel to fetch the wind data from
+     * @param model   datamodel to fetch the wind data from
      * @param plotter ChartPlotter to add the symbols on
      */
     private void plotWindSymbols(GenericDataModel model, ChartPlotter plotter) {
@@ -971,7 +968,7 @@ public class MeteogramWrapper {
     /**
      * Filter cloud data before plotting
      *
-     * @param model datamodel to fetch the wind data from
+     * @param model       datamodel to fetch the wind data from
      * @param symbolTimes used to filter symbols if not null
      */
     private void filterCloudSymbols(GenericDataModel model, List<Date> symbolTimes) {
@@ -1001,17 +998,18 @@ public class MeteogramWrapper {
 
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+
         JFreeChart jchart;
         try {
             ChartPlottingInfo cpi = new ChartPlottingInfo.Builder(10.48, 59.88).altitude(0).width(800).height(300)
                     .showAirTemperature(true).showDewpointTemperature(true).showPressure(true).timezone("UTC").showCloudSymbol(true)
                     .showWeatherSymbol(true).showWindSymbol(true).showPrecipitation(true).showWindSpeed(true)
-                    .showWindDirection(true).windSpeedUnit("knop").build();
+                    .showWindDirection(true).windSpeedUnit("knop").showAccumulatedPrecipitation(true).build();
 
             MeteogramWrapper wrapper = new MeteogramWrapper("en");
 
-            jchart = wrapper.createMeteogram(cpi, SHORT_TERM_HOURS);
+            jchart = wrapper.createMeteogram(cpi, LONG_TERM_HOURS);
 
             ChartFrame frame = new ChartFrame(jchart, new java.awt.Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
             frame.pack();
@@ -1021,4 +1019,11 @@ public class MeteogramWrapper {
         }
         System.out.println("Done!");
     }
+
+    private static ObjectMapper createDefaultObjectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
+        return mapper;
+    }
+
 }

@@ -69,6 +69,22 @@ public class Symbols {
         return bufferedImage;
     }
 
+    public static Image getSymbolImage(String name) {
+        BufferedImage bufferedImage = null;
+        StringBuilder imageName = new StringBuilder();
+        imageName.append(symbolFilePath);
+        imageName.append(String.valueOf(name));
+        imageName.append(".png");
+        try {
+            InputStream in = Symbols.class.getResourceAsStream(imageName.toString());
+            bufferedImage = ImageIO.read(in);
+        } catch (IOException e) {
+            LogUtils.logException(logger, "Failed to read symbol image for i'the image i=" + name, e);
+        }
+
+        return bufferedImage;
+    }
+
     /**
      * Get symbol image object for the specified wind symbol
      * 

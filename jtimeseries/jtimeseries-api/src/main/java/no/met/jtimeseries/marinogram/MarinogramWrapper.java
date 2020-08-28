@@ -40,7 +40,6 @@ import no.met.jtimeseries.chart.ChartPlotter;
 import no.met.jtimeseries.chart.ChartPlottingInfo;
 import no.met.jtimeseries.chart.Symbols;
 import no.met.jtimeseries.chart.TimePeriod;
-import no.met.jtimeseries.chart.Utility;
 import no.met.jtimeseries.data.model.GenericDataModel;
 import no.met.jtimeseries.parser.ForecastParser;
 import no.met.jtimeseries.parser.OceanForecastAddressFactory;

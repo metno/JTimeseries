@@ -925,7 +925,7 @@ public class ChartPlotter {
         int imageSize = getWeatherSymbolImageSize();
 
         for (SymbolValueItem symbol : symbols) {
-            Image image = Symbols.getSymbolImage(symbol.getValue());
+            Image image = Symbols.getSymbolImage(symbol.getName());
             image = image.getScaledInstance(imageSize, imageSize,
                     Image.SCALE_SMOOTH);
             if (followPhenomenon) { // plot over the phenomenon curve

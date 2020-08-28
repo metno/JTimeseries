@@ -25,7 +25,8 @@ import java.util.Date;
 
 public class SymbolValueItem extends AbstractValueItem {
 
-	private final int value;
+	private  int value;
+	private  String name;
 
 	public SymbolValueItem(Date timeFrom, int value){
 		super(timeFrom);
@@ -35,13 +36,18 @@ public class SymbolValueItem extends AbstractValueItem {
 	public SymbolValueItem(Date timeFrom, Date timeTo, int value){
 		super(timeFrom, timeTo);
 		this.value = value;
-	}	
-	
+	}
+
+	public SymbolValueItem(Date timeFrom, Date timeTo, String name){
+		super(timeFrom, timeTo);
+		this.name = name;
+	}
+
 	public int getValue() {
 		return value;
 	}
-	
-	
-	
-	
+
+	public String getName() {
+		return name;
+	}
 }

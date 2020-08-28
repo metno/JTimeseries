@@ -195,11 +195,11 @@ public class LocationForecastParseScheme extends ParseScheme {
                 if (!model.isExist(PhenomenonName.WeatherSymbols.nameWithResolution(timeResolution)))  {
 
                     SymbolPhenomenon weatherSymbols = new SymbolPhenomenon();                 
-                    weatherSymbols.addValue(timeFrom, timeTo, Integer.parseInt(node.attributeValue("number")));
+                    weatherSymbols.addValue(timeFrom, timeTo, node.attributeValue("number"));
                     model.addPhenomenen(PhenomenonName.WeatherSymbols.nameWithResolution(timeResolution), weatherSymbols);                
 
                 }  else {
-                    model.getSymbolPhenomenon(PhenomenonName.WeatherSymbols.nameWithResolution(timeResolution)).addValue(timeFrom, timeTo, Integer.parseInt(node.attributeValue("number")));                
+                    model.getSymbolPhenomenon(PhenomenonName.WeatherSymbols.nameWithResolution(timeResolution)).addValue(timeFrom, timeTo, node.attributeValue("number"));
                 }               
 
 

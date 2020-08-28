@@ -54,6 +54,10 @@ public class SymbolPhenomenon extends AbstractPhenomenon implements Iterable<Sym
 	public void addValue(Date timeFrom, Date timeTo, int value){
 		values.add(new SymbolValueItem(timeFrom, timeTo, value));
 	}
+
+	public void addValue(Date timeFrom, Date timeTo, String name){
+		values.add(new SymbolValueItem(timeFrom, timeTo, name));
+	}
 	
     @Override
     public void cutOlderThan(Date d) {
