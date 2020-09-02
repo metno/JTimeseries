@@ -1,3 +1,5 @@
+release date=11:00 02.09.2019,version=2.30.0,urgency=low,by=Sarfraz Alam <sarfraza@met.no>,distribution=all
+ * Switched to location forecast 2.0
 release date=16:40 03.09.2019,version=2.29.0,urgency=low,by=Bjorn Larsen <bjornkl@met.no>,distribution=all
  * Precipitation column split fix
 release date=14:55 10.12.2018,version=2.28.1,urgency=low,by=Henrik Janson <henrikj@met.no>,distribution=all
