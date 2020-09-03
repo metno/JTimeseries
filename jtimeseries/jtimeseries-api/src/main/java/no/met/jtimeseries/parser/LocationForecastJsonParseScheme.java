@@ -91,7 +91,7 @@ public class LocationForecastJsonParseScheme extends ParseScheme {
 
 
     public LocationForecastJsonParseScheme(int hours) {
-        
+
         model = new GenericDataModel();
     	forecastPeriod = new TimePeriod(new Date(), hours);
         // to prevent problems when converting between daylight savings hours
@@ -208,18 +208,33 @@ public class LocationForecastJsonParseScheme extends ParseScheme {
 
     public void addMultipleTimeResolutionNumberPhenomenon(PhenomenonName phenomenonName, String unit, LocationForecast.TimeSeries ts,
                                                           String propertyName ) {
-        int timeResolution = (Utility.hourDifference(forecastPeriod.getStart(), forecastPeriod.getEnd()) <= MeteogramWrapper.SHORT_TERM_HOURS ? 1 : 6);
+        //int timeResolution = (Utility.hourDifference(forecastPeriod.getStart(), forecastPeriod.getEnd()) <= MeteogramWrapper.SHORT_TERM_HOURS ? 1 : 6);
         // until we can remove multiple time resolution phenomenon
-        LocationForecast.NextXHours next6Hours = (timeResolution == 1) ? ts.getData().getNext1Hours() : ts.getData().getNext6Hours();
+        LocationForecast.NextXHours next1Hours = ts.getData().getNext1Hours();
+
+        if (next1Hours != null) {
+            timeTo = Utility.getDateWithAddedHours(ts.getTime(), 1);
+            if (!model.isExist(phenomenonName.nameWithResolution(1))) {
+                NumberPhenomenon phenom = new NumberPhenomenon();
+                phenom.addValue(timeFrom, timeTo,
+                        new Double((Double) next1Hours.getDetails().get(propertyName)));
+                model.addPhenomenen(phenomenonName.nameWithResolution(1), phenom);
+            } else {
+                model.getNumberPhenomenon(phenomenonName.nameWithResolution(1)).addValue(timeFrom, timeTo,
+                        new Double((Double) next1Hours.getDetails().get(propertyName)));
+            }
+        }
+
+        LocationForecast.NextXHours next6Hours = ts.getData().getNext6Hours();
         if (next6Hours != null) {
-            timeTo = Utility.getDateWithAddedHours(ts.getTime(), timeResolution);
-            if (!model.isExist(phenomenonName.nameWithResolution(timeResolution))) {
+            timeTo = Utility.getDateWithAddedHours(ts.getTime(), 6);
+            if (!model.isExist(phenomenonName.nameWithResolution(6))) {
                 NumberPhenomenon phenom = new NumberPhenomenon();
                 phenom.addValue(timeFrom, timeTo,
                         new Double((Double) next6Hours.getDetails().get(propertyName)));
-                model.addPhenomenen(phenomenonName.nameWithResolution(timeResolution), phenom);
+                model.addPhenomenen(phenomenonName.nameWithResolution(6), phenom);
             } else {
-                model.getNumberPhenomenon(phenomenonName.nameWithResolution(timeResolution)).addValue(timeFrom, timeTo,
+                model.getNumberPhenomenon(phenomenonName.nameWithResolution(6)).addValue(timeFrom, timeTo,
                         new Double((Double) next6Hours.getDetails().get(propertyName)));
             }
         }

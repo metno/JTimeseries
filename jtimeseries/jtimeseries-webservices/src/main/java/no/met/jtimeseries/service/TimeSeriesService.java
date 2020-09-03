@@ -188,7 +188,7 @@ public class TimeSeriesService {
         }
 
         try {
-// Validation fails when new parameters are added, too strict        	
+// Validation fails when new parameters are added, too strict
 //            Schema schema = getLocationForecastSchema();
 //            Validator validator = new LocationForecastValidator(schema);
 //            validator.validate(new SAXSource(new InputSource(new StringReader(forecast))));
@@ -209,7 +209,7 @@ public class TimeSeriesService {
         } catch (DocumentException ex) {
             LogUtils.logException(logger, "Failed to parse provided data", ex);
 //        } catch (SAXException ex) {
-//            Logger.getLogger(TimeSeriesService.class.getName()).log(Level.WARNING, "Invalid schema from api.met.no", ex);            
+//            Logger.getLogger(TimeSeriesService.class.getName()).log(Level.WARNING, "Invalid schema from api.met.no", ex);
 //        } catch (ValidationException ex) {
 //            Logger.getLogger(TimeSeriesService.class.getName()).log(Level.WARNING, ex.getMessage(), ex);
 //            return Response.status(Response.Status.BAD_REQUEST).build();

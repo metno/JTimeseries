@@ -22,22 +22,26 @@
 package no.met.jtimeseries.parser;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.logging.Logger;
-import javax.xml.namespace.QName;
-import javax.xml.stream.EventFilter;
-import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.events.EndElement;
-import javax.xml.stream.events.StartElement;
-import javax.xml.stream.events.XMLEvent;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import no.met.forecasts.LocationForecast;
 import no.met.halo.common.LogUtils;
 import no.met.jtimeseries.ApiMetadata;
 import no.met.jtimeseries.Location;
+import no.met.jtimeseries.chart.Utility;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpHeaders;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 
 /**
  *
@@ -51,10 +55,19 @@ public final class ApiMetadataParser {
         acceptedElements.add("location");
         acceptedElements.add("model");
     }
-    
+
     private ApiMetadataParser() {
     }
-    
+
+    private static ObjectMapper createDefaultObjectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        DateFormat dateFormat = new SimpleDateFormat(Utility.DATE_FORMAT);
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        mapper.setDateFormat(dateFormat);
+        mapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
+        return mapper;
+    }
+
     /**
      * get metadata from location forecast api
      * @param longitude
@@ -63,64 +76,33 @@ public final class ApiMetadataParser {
      */
     public static ApiMetadata getMetadata(double longitude, double latitude) {
         URL url = LocationForecastAddressFactory.getURL(new Location(longitude, latitude));
-        XMLInputFactory xmlif = XMLInputFactory.newInstance();
-        ApiMetadata metadata = null;
-        try (InputStream is = url.openStream()) {              
-            XMLEventReader xmler = xmlif.createXMLEventReader(is); 
-            XMLEventReader xmlfer = xmlif.createFilteredReader(xmler, new EventFilter() {
+        ApiMetadata metadata = new ApiMetadata();
 
-                @Override
-                public boolean accept(XMLEvent event) {
-                    if (event.isStartElement()) {
-                        StartElement startElement = event.asStartElement();
-                        String name = startElement.getName().getLocalPart();                        
-                        if (!acceptedElements.contains(name)) {
-                            return false;
-                        }
-                    }            
-                    if (event.isEndElement()) {
-                        EndElement endElement = event.asEndElement();
-                        String name = endElement.getName().getLocalPart();                        
-                        if (!acceptedElements.contains(name)) {
-                            return false;
-                        }
-                    }
-                    return true;
-                }
-            });
-            while (xmlfer.hasNext()) {
-                XMLEvent event = xmlfer.nextEvent();                
-                if (event.isStartElement()) {
-                    StartElement startElement = event.asStartElement();
-                    switch (startElement.getName().getLocalPart()) {
-                        case "model":                               
-                            if (metadata == null) {
-                                metadata = new ApiMetadata();
-                            }    
-                            ApiMetadata.ApiModel model = new ApiMetadata.ApiModel();
-                            model.setName(startElement.getAttributeByName(new QName("name")).getValue());
-                            model.setFrom(startElement.getAttributeByName(new QName("from")).getValue());
-                            model.setTo(startElement.getAttributeByName(new QName("to")).getValue());
-                            model.setNextRun(startElement.getAttributeByName(new QName("nextrun")).getValue());
-                            model.setTermin(startElement.getAttributeByName(new QName("termin")).getValue());
-                            model.setRunended(startElement.getAttributeByName(new QName("runended")).getValue());
-                            metadata.addModel(model);
-                           
-                            break;  
-                        case "location":                            
-                            if (metadata == null) {
-                                metadata = new ApiMetadata();
-                            }    
-                            metadata.setAltitude(Integer.parseInt(startElement.
-                                    getAttributeByName(new QName("altitude")).getValue()));
-                           
-                            break;                        
-                    }                    
-                }
-            }     
-                
-        }  catch (IOException | XMLStreamException ex) {            
-            LogUtils.logException(Logger.getLogger(ApiMetadataParser.class.getName()), "Failed to parse product from" +url.toString(), ex);            
+        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+            HttpGet request = new HttpGet(url.toString());
+            // add request headers
+            request.addHeader(HttpHeaders.USER_AGENT, "halo.met.no");
+
+            try (CloseableHttpResponse response = httpClient.execute(request);) {
+                HttpEntity entity = response.getEntity();
+                ObjectMapper mapper = createDefaultObjectMapper();
+                LocationForecast locationForecast = mapper.readValue(entity.getContent(), LocationForecast.class);
+                LocationForecast.Meta meta = locationForecast.getProperties().getMeta();
+
+                ApiMetadata.ApiModel model = new ApiMetadata.ApiModel();
+                //hard code to avoid update halo at the moment
+                model.setName("EPS");
+                //blindly set all run, termin values to updateAt since locationforecast 2 only has updatedAt, this will make halo happy
+                model.setNextRun(meta.getUpdatedAt());
+                model.setNextRun(meta.getUpdatedAt());
+                model.setTermin(meta.getUpdatedAt());
+                model.setRunended(meta.getUpdatedAt());
+                metadata.setAltitude((int)locationForecast.getGeometry().getCoordinates().get(2));
+                metadata.addModel(model);
+
+            }
+        } catch (IOException ex) {
+            LogUtils.logException(Logger.getLogger(ApiMetadataParser.class.getName()), "Failed to parse product from" +url.toString(), ex);
         }
         return metadata;
     }
