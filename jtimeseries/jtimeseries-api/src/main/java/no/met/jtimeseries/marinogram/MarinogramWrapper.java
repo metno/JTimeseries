@@ -169,12 +169,6 @@ public class MarinogramWrapper extends MarinogramPlot {
             Location location = new Location(cpi.getLongitude(),
                     cpi.getLatitude());
             // The curve will not be shown if too many data points when setDrawSeriesLineAsPath(true) in render;
-            OceanForecastParseScheme oceanForecastParseScheme = new OceanForecastParseScheme(timePeriod);
-            ForecastParser forecastParser = new ForecastParser(
-                    oceanForecastParseScheme, OceanForecastAddressFactory.getURL(location).toString());
-            // parse locationforcast data from api.met.no
-            //MarinogramAPIHandler api = new MarinogramAPIHandler();
-            //api.fetchAsJson(OceanForecastAddressFactory.getURL(location));
             GenericDataModel locationForecastDataModel = null;
             GenericDataModel model = null;
 
