@@ -39,12 +39,12 @@ public class ForecastParser {
     private static final Logger logger = Logger.getLogger(ForecastParser.class.getSimpleName());
     private Parser parser;
     private String resource;
-    
+
     public ForecastParser(Parser parser, String resource) {
     	this.parser = parser;
     	this.resource = resource;
     }
-    
+
     public Document getDocument() {
         Document document = null;
         try {
@@ -55,14 +55,16 @@ public class ForecastParser {
         }
         return document;
     }
-    
+
     /**
      * Parse the data based on the scheme and then populate the model
      * @return data model
-     * @throws ParseException 
+     * @throws ParseException
      */
-    public GenericDataModel populateModelWithData() throws ParseException, IOException {    	
-    	return parser.parse(resource);    	
+    public GenericDataModel populateModelWithData() throws ParseException, IOException {
+    	return parser.parse(resource);
     }
-    
+
+
+
 }

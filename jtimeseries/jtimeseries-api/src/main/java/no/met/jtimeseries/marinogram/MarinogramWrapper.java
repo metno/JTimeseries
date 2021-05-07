@@ -24,6 +24,7 @@ package no.met.jtimeseries.marinogram;
 import java.awt.Color;
 import java.awt.GradientPaint;
 import java.awt.Paint;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -41,9 +42,7 @@ import no.met.jtimeseries.chart.ChartPlottingInfo;
 import no.met.jtimeseries.chart.Symbols;
 import no.met.jtimeseries.chart.TimePeriod;
 import no.met.jtimeseries.data.model.GenericDataModel;
-import no.met.jtimeseries.parser.ForecastParser;
-import no.met.jtimeseries.parser.OceanForecastAddressFactory;
-import no.met.jtimeseries.parser.OceanForecastParseScheme;
+import no.met.jtimeseries.parser.*;
 
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
@@ -106,7 +105,7 @@ public class MarinogramWrapper extends MarinogramPlot {
         for (int i = plots.size() - 1; i >= 0; i--) {
             MarinogramPlot marinogramPlot = plots.get(i);
             XYPlot plot = marinogramPlot.getPlot();
-            
+
             if (combiPlot == null) {
                 // create a stacked plot with the domain axis of the first plot
                 combiPlot = new StackedXYPlot(plot.getDomainAxis());
@@ -127,7 +126,7 @@ public class MarinogramWrapper extends MarinogramPlot {
     }
 
     private static Date getStartDate() {
-    	
+
     	Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
     	cal.setTime(new Date());
     	cal.set(Calendar.MINUTE, 0);
@@ -137,17 +136,27 @@ public class MarinogramWrapper extends MarinogramPlot {
     	int startHour = 3;
     	int offset = (startHour - (cal.get(Calendar.HOUR) % startHour));
     	cal.add(Calendar.HOUR, offset);
-    	
+
     	System.out.println(cal.getTime() + " - " + offset);
-    	
+
     	return cal.getTime();
     }
 
-    
+    public static GenericDataModel getModel(String resource, TimePeriod timePeriod) throws ParseException, IOException {
+
+        GenericDataModel model = new GenericDataModel();
+        OceanForecastJsonParseScheme oceanForecastParser = new OceanForecastJsonParseScheme(timePeriod);
+        oceanForecastParser.setModel(model);
+
+        ForecastParser forecastParser = new ForecastParser(oceanForecastParser, resource);
+        return forecastParser.populateModelWithData();
+    }
+
+
     public JFreeChart createMarinogram(ChartPlottingInfo cpi) {
         JFreeChart jchart = null;
         if (!cpi.isShowAirTemperature() && !cpi.isShowWaterTemperature() && !cpi.isShowPressure()
-                && !cpi.isShowWaveDirection() && !cpi.isShowWaveHeight() 
+                && !cpi.isShowWaveDirection() && !cpi.isShowWaveHeight()
                 && !cpi.isShowCurrentDirection() && !cpi.isShowCurrentSpeed()
                 && !cpi.isShowWindDirection() && !cpi.isShowWindSpeed() && !cpi.isShowDewpointTemperature()) {
             jchart = createEmptyChart(cpi);
@@ -155,7 +164,7 @@ public class MarinogramWrapper extends MarinogramPlot {
         }
         try {
         	TimePeriod timePeriod = new TimePeriod(new Date(), MeteogramWrapper.SHORT_TERM_HOURS).adapt(3);
-        	
+
             // parse oceanforecast data from api.met.no
             Location location = new Location(cpi.getLongitude(),
                     cpi.getLatitude());
@@ -164,6 +173,8 @@ public class MarinogramWrapper extends MarinogramPlot {
             ForecastParser forecastParser = new ForecastParser(
                     oceanForecastParseScheme, OceanForecastAddressFactory.getURL(location).toString());
             // parse locationforcast data from api.met.no
+            //MarinogramAPIHandler api = new MarinogramAPIHandler();
+            //api.fetchAsJson(OceanForecastAddressFactory.getURL(location));
             GenericDataModel locationForecastDataModel = null;
             GenericDataModel model = null;
 
@@ -177,12 +188,12 @@ public class MarinogramWrapper extends MarinogramPlot {
                 mp.setShowDewTemp(cpi.isShowDewpointTemperature());
                 locationForecastDataModel = MeteogramWrapper.getModel(location, timePeriod);
                 mp.setLocationForecastDataModel(locationForecastDataModel);
-                model = forecastParser.populateModelWithData();
+                model = this.getModel(OceanForecastAddressFactory.getURL(location).toString(), timePeriod);
                 mp.setOceanForecastDataModel(model);
                 this.addPlot(mp);
 
             }
-            
+
             if (cpi.isShowCurrentDirection() || cpi.isShowCurrentSpeed()) {
                 MarinogramCurrentPlot mp = new MarinogramCurrentPlot(cpi.getWidth(),
                         cpi.getWidth() / 7, cpi.getTimezone(), cpi.getLanguage());
@@ -193,7 +204,7 @@ public class MarinogramWrapper extends MarinogramPlot {
 
                 // extra check if model has no data
                 if (model == null) {
-                    model = forecastParser.populateModelWithData();
+                    model = this.getModel(OceanForecastAddressFactory.getURL(location).toString(), timePeriod);
                 }
                 mp.setOceanForecastDataModel(model);
                 this.addPlot(mp);
@@ -210,13 +221,13 @@ public class MarinogramWrapper extends MarinogramPlot {
 
                 // extra check if model has no data
                 if (model == null) {
-                    model = forecastParser.populateModelWithData();
+                    model = this.getModel(OceanForecastAddressFactory.getURL(location).toString(), timePeriod);
                 }
                 mp.setOceanForecastDataModel(model);
                 this.addPlot(mp);
 
             }
-            
+
             if (cpi.isShowPressure()) {
                 MarinogramPressurePlot pressurePlot = new MarinogramPressurePlot(
                         cpi.getWidth(), cpi.getWidth() / 7, cpi.getTimezone(), cpi.getLanguage());
@@ -229,7 +240,7 @@ public class MarinogramWrapper extends MarinogramPlot {
                 pressurePlot.setLocationForecastDataModel(locationForecastDataModel);
                 this.addPlot(pressurePlot);
             }
-            
+
             if (cpi.isShowWindDirection() || cpi.isShowWindSpeed()) {
                 MarinogramWindPlot mp = new MarinogramWindPlot(cpi.getWidth(),
                         cpi.getWidth() / 7, cpi.getTimezone(), cpi.getLanguage());
@@ -240,7 +251,7 @@ public class MarinogramWrapper extends MarinogramPlot {
 
                 // extra check if model has no data
                 if (model == null) {
-                    model = forecastParser.populateModelWithData();
+                    model = this.getModel(OceanForecastAddressFactory.getURL(location).toString(), timePeriod);
                 }
                 locationForecastDataModel = MeteogramWrapper.getModel(location, timePeriod);
                 mp.setLocationForecastDataModel(locationForecastDataModel);
@@ -248,7 +259,7 @@ public class MarinogramWrapper extends MarinogramPlot {
                 this.addPlot(mp);
 
             }
-            
+
             jchart = createJFreeChart("", this.getPlot(), this.getWidth());
 
         } catch (Exception e) {
@@ -297,14 +308,14 @@ public class MarinogramWrapper extends MarinogramPlot {
         marinogram.setDescription("marinogram");
 
         MarinogramWrapper marinogram1 = new MarinogramWrapper(940, 200, "UTC", "en");
-        // 
+        //
         // 30.95, 71.5
         // 58.9653, 5.7180
         //41.8947&longitude=12.4839
         //41.0138
-        //5.04092, 58.89468 
-        //16.66, 68.56 
-        //10.72938, 71.50000 
+        //5.04092, 58.89468
+        //16.66, 68.56
+        //10.72938, 71.50000
         ChartPlottingInfo cpi = new ChartPlottingInfo.Builder(5.32905, 74.39825)
                 .width(mp1.getWidth()).showAirTemperature(true)
                 .showWaterTemperature(true).showDewpointTemperature(true).showPressure(true)
