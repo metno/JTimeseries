@@ -101,7 +101,7 @@ public class MarinogramWavePlot extends MarinogramPlot {
         if (waveHeight == null || waveDirection == null) {
             return  null;
         }
-        
+
         double tick=(waveHeight.getMaxValue()-waveHeight.getMinValue())/2;
         tick=Math.ceil(tick);
         double lowBound = Math.floor(waveHeight.getMinValue()/(tick))*(tick);
@@ -139,7 +139,7 @@ public class MarinogramWavePlot extends MarinogramPlot {
 				.numberAxis(leftNumberAxis).nonNegative(true).build();
 
 		//Draw the wave height even if plotWaveHeight is false (but with transparent in such a case)
-		//for the purpose to keep the same background grid and tick label on the y-axis 
+		//for the purpose to keep the same background grid and tick label on the y-axis
 		//no matter the wave height is shown or not
 		plotter.addLineChart(TimeBase.SECOND,waveHeight, plotStyle);
 
@@ -150,7 +150,7 @@ public class MarinogramWavePlot extends MarinogramPlot {
 		// lines
 		// TODO: wrap this inside the addHourBasedDomainGridLines for
 		// simplicity
-        
+
 		Date minDate = shortTermTime.get(0);
 		Date maxDate = shortTermTime.get(shortTermTime.size() - 1);
 		plotter.setDomainRange(minDate, maxDate);
@@ -167,6 +167,8 @@ public class MarinogramWavePlot extends MarinogramPlot {
 					waveDirection.getTime(), 2,1);
 			InListFromDateFilter symbolTimesFilter = new InListFromDateFilter(symbolTimes);
 			waveDirection.filter(symbolTimesFilter);
+			// when plot wave direction, the arrow should be rotated 180 degree
+			waveDirection = waveDirection.transform(180);
 			waveHeight = null;
 			if (plotWaveHeight) {
 				waveHeight = getOceanForecastDataModel()
@@ -178,7 +180,7 @@ public class MarinogramWavePlot extends MarinogramPlot {
 			plotter.addArrowDirectionPlot(waveDirection, waveHeight, 0.1, plotStyle);
 		}
 		plotter.getPlot().setRangeZeroBaselineVisible(false);
-        
+
 		return plotter.getPlot();
 
 	}
