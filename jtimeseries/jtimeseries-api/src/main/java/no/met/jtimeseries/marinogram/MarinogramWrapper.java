@@ -247,7 +247,9 @@ public class MarinogramWrapper extends MarinogramPlot {
                 if (model == null) {
                     model = this.getModel(OceanForecastAddressFactory.getURL(location).toString(), timePeriod);
                 }
-                locationForecastDataModel = MeteogramWrapper.getModel(location, timePeriod);
+                if (locationForecastDataModel == null){
+                    locationForecastDataModel = MeteogramWrapper.getModel(location, timePeriod);
+                }
                 mp.setLocationForecastDataModel(locationForecastDataModel);
                 mp.setOceanForecastDataModel(model);
                 this.addPlot(mp);
