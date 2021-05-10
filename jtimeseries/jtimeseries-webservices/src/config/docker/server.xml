@@ -26,8 +26,6 @@
   -->
   <!--APR library loader. Documentation at /docs/apr.html -->
   <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
-  <!--Initialize Jasper prior to webapps are loaded. Documentation at /docs/jasper-howto.html -->
-  <Listener className="org.apache.catalina.core.JasperListener" />
   <!-- Prevent memory leaks due to use of particular java/javax APIs-->
   <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
   <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
@@ -83,18 +81,18 @@
          style configuration. When using the APR/native implementation, the
          OpenSSL style configuration is required as described in the APR/native
          documentation -->
-         <Connector 
+         <Connector
                 port="8443"
                 protocol="HTTP/1.1"
-                URIEncoding="UTF-8" 
+                URIEncoding="UTF-8"
                 SSLEnabled="true"
-                maxThreads="150" 
-                scheme="https" 
+                maxThreads="150"
+                scheme="https"
                 secure="true"
-                clientAuth="false" 
-                sslProtocol="TLS" 
-                SSLCertificateFile="/etc/ssl/certs/ssl-cert-snakeoil.pem" 
-                SSLCertificateKeyFile="/etc/ssl/private/ssl-cert-snakeoil.key" 
+                clientAuth="false"
+                sslProtocol="TLS"
+                SSLCertificateFile="/etc/ssl/certs/ssl-cert-snakeoil.pem"
+                SSLCertificateKeyFile="/etc/ssl/private/ssl-cert-snakeoil.key"
                 SSLCipherSuite="ALL" />
                 <!-- SSLCertificateChainFile="/PATH/TO/SSL/CERTIFICATE/CHAIN/FILE/chain.pem" -->
 
